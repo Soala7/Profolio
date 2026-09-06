@@ -1,0 +1,1750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Soala Amachree · Mechatronics & Software</title>
+
+  <meta
+    name="description"
+    content="Portfolio of Soala Amachree — Mechatronics Engineering student exploring software, systems, AI, robotics and hardware."
+  />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #090c11;
+      color: #dce5f0;
+      font-family: "Inter", sans-serif;
+      line-height: 1.6;
+      padding: 24px 16px;
+    }
+
+    body::selection {
+      background: #31465d;
+      color: white;
+    }
+
+    a {
+      color: #86b7f2;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: #b8d5ff;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .container {
+      max-width: 1250px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .mono {
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    .muted {
+      color: #8492a6;
+    }
+
+    .small {
+      font-size: 0.82rem;
+    }
+
+    .card {
+      background: #0e141c;
+      border: 1px solid #202a37;
+      border-radius: 16px;
+      padding: 22px;
+      transition: 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: #344356;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .flex {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* HEADER */
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .name {
+      font-size: 2.4rem;
+      letter-spacing: -0.04em;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: #93a7bd;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.95rem;
+      margin-top: 3px;
+    }
+
+    .socials {
+      display: flex;
+      gap: 14px;
+    }
+
+    .socials a {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #293442;
+      border-radius: 10px;
+      color: #a9b8ca;
+      transition: 0.2s;
+    }
+
+    .socials a:hover {
+      color: white;
+      border-color: #58718f;
+      transform: translateY(-2px);
+    }
+
+    /* HERO */
+
+    .hero {
+      border-left: 4px solid #456e93;
+      background:
+        radial-gradient(
+          circle at 90% 10%,
+          rgba(60, 100, 140, 0.1),
+          transparent 30%
+        ),
+        #0e141c;
+    }
+
+    .hero-text {
+      max-width: 800px;
+      color: #b6c4d4;
+      font-size: 1rem;
+    }
+
+    .status {
+      margin-top: 15px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #151d27;
+      border: 1px solid #2a3747;
+      color: #b9c7d7;
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+    }
+
+    /* SKILL LEVELS */
+    .built {
+      background: rgba(34, 197, 94, 0.12);
+      border-color: rgba(34, 197, 94, 0.4);
+      color: #7ee2a8;
+    }
+
+    .used {
+      background: rgba(59, 130, 246, 0.12);
+      border-color: rgba(59, 130, 246, 0.4);
+      color: #8db9ff;
+    }
+
+    .learning {
+      background: rgba(245, 158, 11, 0.12);
+      border-color: rgba(245, 158, 11, 0.4);
+      color: #f5c76b;
+    }
+
+    .studied {
+      background: rgba(168, 85, 247, 0.12);
+      border-color: rgba(168, 85, 247, 0.4);
+      color: #c7a1f7;
+    }
+
+    /* SECTION */
+
+    section > h2 {
+      font-size: 1.35rem;
+      border-bottom: 1px solid #202a37;
+      padding-bottom: 9px;
+      margin-bottom: 15px;
+    }
+
+    /* SKILL LEGEND */
+
+    .skill-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+
+    .legend-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* PROJECT FILTERS */
+
+    .filters {
+      margin-bottom: 15px;
+    }
+
+    .filter-btn {
+      background: #121a24;
+      border: 1px solid #283442;
+      color: #9eafc3;
+      border-radius: 999px;
+      padding: 7px 15px;
+      cursor: pointer;
+      font-size: 0.78rem;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: #26384c;
+      border-color: #506a86;
+      color: white;
+    }
+
+    /* PROJECT */
+
+    .project {
+      cursor: pointer;
+    }
+
+    .project-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 7px;
+    }
+
+    .project-title strong {
+      font-size: 1rem;
+    }
+
+    .project-description {
+      color: #9eafc1;
+      font-size: 0.87rem;
+    }
+
+    /* TECHNOLOGY */
+
+    .tech-card {
+      cursor: default;
+    }
+
+    .tech-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tech-evidence {
+      margin-top: 7px;
+      color: #899aaf;
+      font-size: 0.78rem;
+    }
+
+    /* SYSTEMS */
+
+    .system-diagram {
+      background: #080d13;
+      border: 1px solid #1e2936;
+      border-radius: 15px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .system-node {
+      min-width: 180px;
+      text-align: center;
+      background: #17212d;
+      border: 1px solid #304254;
+      border-radius: 999px;
+      padding: 8px 20px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .system-node:hover {
+      background: #223142;
+      border-color: #55718e;
+      transform: scale(1.03);
+    }
+
+    .arrow {
+      color: #56687c;
+      margin: 3px 0;
+    }
+
+    .system-info {
+      margin-top: 15px;
+      background: #0a1017;
+      border: 1px solid #202b38;
+      padding: 13px;
+      border-radius: 10px;
+      color: #9fb0c2;
+    }
+
+    /* LEARNING MAP */
+
+    .learning-map {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .learning-box {
+      background: #0b1118;
+      border: 1px solid #202c39;
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .learning-box h3 {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.85rem;
+      color: #9eb8d2;
+      margin-bottom: 10px;
+    }
+
+    .learning-box div {
+      font-size: 0.82rem;
+      color: #8798aa;
+      line-height: 1.9;
+    }
+
+    /* IMAGES */
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .image-card {
+      overflow: hidden;
+      border-radius: 13px;
+      border: 1px solid #263240;
+      background: #090d13;
+      cursor: pointer;
+    }
+
+    .image-card img {
+      display: block;
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+
+    .image-card:hover img {
+      transform: scale(1.03);
+    }
+
+    .image-caption {
+      padding: 10px 12px;
+      font-size: 0.78rem;
+      color: #9aabba;
+    }
+
+    .image-error {
+      height: 220px;
+      display: grid;
+      place-items: center;
+      color: #687789;
+      background: #0b1017;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.75rem;
+    }
+
+    /* EDUCATION */
+
+    .education-card h3 {
+      margin-bottom: 13px;
+    }
+
+    .grades {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+    }
+
+    .grade {
+      background: #111923;
+      border-left: 3px solid #496581;
+      padding: 7px 9px;
+      font-size: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .grade strong {
+      color: #b8d1eb;
+    }
+
+    /* TERMINAL */
+
+    .terminal {
+      background: #070a0f;
+      border: 1px solid #222d39;
+      border-radius: 13px;
+      overflow: hidden;
+    }
+
+    .terminal-bar {
+      padding: 9px 13px;
+      background: #111821;
+      border-bottom: 1px solid #222d39;
+      color: #687789;
+      font-size: 0.75rem;
+    }
+
+    #terminalOutput {
+      padding: 15px;
+      min-height: 180px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.8rem;
+    }
+
+    .terminal-line {
+      margin-bottom: 7px;
+      color: #a9b9c9;
+    }
+
+    .terminal-highlight {
+      color: #d9bd72;
+    }
+
+    .terminal-input {
+      display: flex;
+      padding: 11px 15px;
+      border-top: 1px solid #222d39;
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    .terminal-input span {
+      color: #70a47d;
+      margin-right: 8px;
+    }
+
+    .terminal-input input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #dce5f0;
+      font-family: inherit;
+    }
+
+    /* FOOTER */
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
+      color: #8392a4;
+      font-size: 0.8rem;
+    }
+
+    /* MODAL */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .modal-content {
+      position: relative;
+      width: min(1000px, 95vw);
+      max-height: 94vh;
+      overflow: auto;
+      background: #0d131b;
+      border: 1px solid #344252;
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .modal-close {
+      position: absolute;
+      right: 15px;
+      top: 10px;
+      border: none;
+      background: #121b25;
+      color: white;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .modal-content img {
+      width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+      display: block;
+      margin-top: 15px;
+      border-radius: 8px;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 900px) {
+      .grid-3,
+      .learning-map,
+      .image-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding: 15px 10px;
+      }
+
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .name {
+        font-size: 1.9rem;
+      }
+
+      .grid-2,
+      .grid-3,
+      .learning-map,
+      .image-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .grades {
+        grid-template-columns: 1fr;
+      }
+
+      .system-node {
+        min-width: 150px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+
+    <div>
+      <div class="name">Soala Amachree</div>
+
+      <div class="subtitle">
+        Mechatronics Engineering · Software · Systems
+      </div>
+
+      <div class="muted small" style="margin-top: 5px;">
+        Software, electronics, AI, robotics and learning how computers work underneath.
+      </div>
+    </div>
+
+    <div class="socials">
+
+      <a
+        href="https://github.com/Soala7"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="GitHub"
+      >
+        <i class="fab fa-github"></i>
+      </a>
+
+      <a
+        href="https://x.com/Soala7VA"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="X"
+      >
+        <i class="fab fa-x-twitter"></i>
+      </a>
+
+      <a
+        href="https://www.linkedin.com/in/soala-amachree"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="LinkedIn"
+      >
+        <i class="fab fa-linkedin"></i>
+      </a>
+
+      <a
+        href="https://www.tiktok.com/@thecodegambit"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="TikTok"
+      >
+        <i class="fab fa-tiktok"></i>
+      </a>
+
+      <a
+        href="https://youtube.com/@sk7r-by"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="YouTube"
+      >
+        <i class="fab fa-youtube"></i>
+      </a>
+
+    </div>
+
+  </header>
+
+
+  <!-- HERO -->
+
+  <section class="card hero">
+
+    <div class="hero-text">
+      I build software, experiment with systems programming, explore AI,
+      and work with electronics and mechanical design as part of my
+      Mechatronics Engineering path.
+    </div>
+
+    <div class="wrap status">
+
+      <span class="chip built">Python</span>
+      <span class="chip used">C</span>
+      <span class="chip used">C++</span>
+      <span class="chip used">JavaScript</span>
+      <span class="chip used">HTML/CSS</span>
+      <span class="chip used">Git/GitHub</span>
+      <span class="chip used">Linux</span>
+
+      <span class="chip learning">Rust</span>
+      <span class="chip learning">x86-64 Assembly</span>
+      <span class="chip learning">Blender</span>
+      <span class="chip learning">Robotics</span>
+
+    </div>
+
+  </section>
+
+
+  <!-- PROJECTS -->
+
+  <section id="projects">
+
+    <h2>
+      <i class="fas fa-code-branch"></i>
+      Projects & experiments
+    </h2>
+
+    <div class="wrap filters" id="filters">
+
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="software">Software</button>
+      <button class="filter-btn" data-filter="systems">Systems</button>
+      <button class="filter-btn" data-filter="ai">AI</button>
+      <button class="filter-btn" data-filter="web">Web</button>
+      <button class="filter-btn" data-filter="hardware">Hardware</button>
+
+    </div>
+
+    <div class="grid-2" id="projectList"></div>
+
+  </section>
+
+
+  <!-- SYSTEMS LAB -->
+
+  <section id="systems" class="card">
+
+    <h2>
+      <i class="fas fa-layer-group"></i>
+      Systems lab
+    </h2>
+
+    <div class="system-diagram">
+
+      <div class="system-node" data-system="firmware">
+        Firmware
+      </div>
+
+      <div class="arrow">↓</div>
+
+      <div class="system-node" data-system="bootloader">
+        Bootloader
+      </div>
+
+      <div class="arrow">↓</div>
+
+      <div class="system-node" data-system="kernel">
+        Kernel
+      </div>
+
+      <div class="arrow">↓</div>
+
+      <div class="system-node" data-system="drivers">
+        Drivers
+      </div>
+
+      <div class="arrow">↓</div>
+
+      <div class="system-node" data-system="userspace">
+        Userspace
+      </div>
+
+      <div class="arrow">↓</div>
+
+      <div class="system-node" data-system="applications">
+        Applications
+      </div>
+
+    </div>
+
+    <div class="system-info" id="systemInfo">
+      Click a layer to explore what it does.
+    </div>
+
+  </section>
+
+
+  <!-- TECHNOLOGIES -->
+
+  <section>
+
+    <h2>
+      <i class="fas fa-toolbox"></i>
+      Languages & tools
+    </h2>
+
+    <div class="skill-legend">
+      <span class="chip built">
+        <span class="legend-dot"></span>
+        Strong
+      </span>
+      <span class="chip used">
+        <span class="legend-dot"></span>
+        Used
+      </span>
+      <span class="chip learning">
+        <span class="legend-dot"></span>
+        Learning
+      </span>
+      <span class="chip studied">
+        <span class="legend-dot"></span>
+        Explored
+      </span>
+    </div>
+
+    <div class="grid-3" id="techGrid"></div>
+
+  </section>
+
+
+  <!-- LEARNING MAP -->
+
+  <section class="card">
+
+    <h2>
+      <i class="fas fa-map"></i>
+      Current learning map
+    </h2>
+
+    <div class="learning-map">
+
+      <div class="learning-box">
+        <h3>SOFTWARE</h3>
+
+        <div>
+          → Python<br>
+          → C / C++<br>
+          → JavaScript<br>
+          → Rust<br>
+          → Assembly<br>
+          → Algorithms
+        </div>
+      </div>
+
+      <div class="learning-box">
+        <h3>SYSTEMS</h3>
+
+        <div>
+          → Operating systems<br>
+          → Kernel development<br>
+          → Virtual memory<br>
+          → Filesystems<br>
+          → QEMU / KVM<br>
+          → Linux
+        </div>
+      </div>
+
+      <div class="learning-box">
+        <h3>AI</h3>
+
+        <div>
+          → Machine learning<br>
+          → Deep Q-Learning<br>
+          → PyTorch<br>
+          → OpenCV<br>
+          → Computer vision<br>
+          → Reinforcement learning
+        </div>
+      </div>
+
+      <div class="learning-box">
+        <h3>HARDWARE</h3>
+
+        <div>
+          → Arduino<br>
+          → Electronics<br>
+          → KiCad<br>
+          → PCB design<br>
+          → CAD<br>
+          → Robotics
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- EDUCATION -->
+
+  <section>
+
+    <h2>
+      <i class="fas fa-graduation-cap"></i>
+      Education & credentials
+    </h2>
+
+    <div class="grid-2">
+
+      <div class="card education-card">
+
+        <h3>WASSCE 2026</h3>
+
+        <div class="grades">
+
+          <div class="grade">
+            <span>Further Mathematics</span>
+            <strong>A1</strong>
+          </div>
+
+          <div class="grade">
+            <span>Mathematics</span>
+            <strong>A1</strong>
+          </div>
+
+          <div class="grade">
+            <span>Chemistry</span>
+            <strong>A1</strong>
+          </div>
+
+          <div class="grade">
+            <span>Digital Technologies</span>
+            <strong>A1</strong>
+          </div>
+
+          <div class="grade">
+            <span>Geography</span>
+            <strong>A1</strong>
+          </div>
+
+          <div class="grade">
+            <span>Civic Education</span>
+            <strong>A1</strong>
+          </div>
+
+          <div class="grade">
+            <span>English Language</span>
+            <strong>B2</strong>
+          </div>
+
+          <div class="grade">
+            <span>Physics</span>
+            <strong>B3</strong>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h3>UTME 2026</h3>
+
+        <div class="wrap">
+
+          <span class="chip">Physics · 89</span>
+          <span class="chip">Chemistry · 87</span>
+          <span class="chip">Mathematics · 75</span>
+          <span class="chip">English · 57</span>
+
+        </div>
+
+        <div style="margin-top:12px;">
+          <strong>Aggregate: 308</strong>
+        </div>
+
+        <hr style="border:0;border-top:1px solid #222d39;margin:18px 0;">
+
+        <h3>CS50P</h3>
+
+        <div class="muted small">
+          Harvard University's Introduction to Programming with Python.
+        </div>
+
+        <div class="muted small" style="margin-top:5px;">
+          Completed in 2026 · 9 problem sets + final project.
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- TERMINAL -->
+
+  <section class="card">
+
+    <h2>
+      <i class="fas fa-terminal"></i>
+      Portfolio terminal
+    </h2>
+
+    <div class="terminal">
+
+      <div class="terminal-bar">
+        soala@portfolio — bash
+      </div>
+
+      <div id="terminalOutput">
+
+        <div class="terminal-line">
+          Type <span class="terminal-highlight">help</span>
+          to see available commands.
+        </div>
+
+      </div>
+
+      <div class="terminal-input">
+
+        <span>$</span>
+
+        <input
+          id="terminalInput"
+          type="text"
+          autocomplete="off"
+          placeholder="type a command..."
+        >
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- FOOTER -->
+
+  <footer class="card">
+
+    <div>
+      <i class="fab fa-github"></i>
+      <a
+        href="https://github.com/Soala7"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        github.com/Soala7
+      </a>
+    </div>
+
+    <div>
+      <i class="fab fa-linkedin"></i>
+      <a
+        href="https://www.linkedin.com/in/soala-amachree"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        LinkedIn
+      </a>
+    </div>
+
+    <div>
+      <i class="fab fa-x-twitter"></i>
+      <a
+        href="https://x.com/Soala7VA"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        @Soala7VA
+      </a>
+    </div>
+
+    <div class="muted">
+      Static HTML · CSS · JavaScript
+    </div>
+
+  </footer>
+
+</div>
+
+
+<!-- IMAGE MODAL -->
+
+<div class="modal" id="imageModal">
+
+  <div class="modal-content">
+
+    <button
+      class="modal-close"
+      onclick="closeModal()"
+      aria-label="Close image"
+    >
+      ×
+    </button>
+
+    <h3 id="modalTitle"></h3>
+
+    <img id="modalImage" src="" alt="">
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   TECHNOLOGIES (with honest statuses)
+========================================================= */
+
+const technologies = [
+  {
+    name: "Python",
+    status: "built",
+    evidence: "CS50P, Snake AI, VirtualOS, games, web and automation."
+  },
+  {
+    name: "C",
+    status: "used",
+    evidence: "CHIP-8 emulator, Unix shell and low-level OS/kernel work."
+  },
+  {
+    name: "C++",
+    status: "used",
+    evidence: "Systems programming, SDL2 and emulator/low-level experiments."
+  },
+  {
+    name: "JavaScript",
+    status: "used",
+    evidence: "Interactive websites and frontend development."
+  },
+  {
+    name: "HTML / CSS",
+    status: "used",
+    evidence: "Multiple websites and interactive interfaces."
+  },
+  {
+    name: "Git / GitHub",
+    status: "built",
+    evidence: "Used across personal projects and public source-code repositories."
+  },
+  {
+    name: "Linux / Bash",
+    status: "used",
+    evidence: "Development environment, command-line workflows and systems work."
+  },
+  {
+    name: "GCC / GDB",
+    status: "used",
+    evidence: "C/C++ compilation, debugging and low-level development."
+  },
+  {
+    name: "QEMU / KVM",
+    status: "used",
+    evidence: "Virtual-machine testing for operating-system development."
+  },
+  {
+    name: "NASM",
+    status: "used",
+    evidence: "x86 Assembly and bootloader/kernel experiments."
+  },
+  {
+    name: "Docker",
+    status: "used",
+    evidence: "Development environments and OS development workflow."
+  },
+  {
+    name: "PyTorch",
+    status: "used",
+    evidence: "Deep Q-Learning Snake AI."
+  },
+  {
+    name: "OpenCV",
+    status: "used",
+    evidence: "Computer vision and visualisation experiments."
+  },
+  {
+    name: "Flask / Django",
+    status: "used",
+    evidence: "Python web-development projects and experiments."
+  },
+  {
+    name: "Arduino",
+    status: "used",
+    evidence: "Electronics and embedded experiments."
+  },
+  {
+    name: "KiCad",
+    status: "used",
+    evidence: "PCB and circuit-design work."
+  },
+  {
+    name: "Fusion 360",
+    status: "used",
+    evidence: "Mechanical CAD and design work."
+  },
+  {
+    name: "Onshape",
+    status: "used",
+    evidence: "3D CAD modelling."
+  },
+  {
+    name: "Rust",
+    status: "learning",
+    evidence: "Currently exploring systems programming."
+  },
+  {
+    name: "x86-64 Assembly",
+    status: "learning",
+    evidence: "Currently developing low-level OS and bootloader knowledge."
+  },
+  {
+    name: "Blender",
+    status: "learning",
+    evidence: "Currently learning 3D modelling."
+  },
+  {
+    name: "TensorFlow",
+    status: "studied",
+    evidence: "Explored as part of machine-learning development."
+  },
+  {
+    name: "React",
+    status: "studied",
+    evidence: "Frontend framework explored through development experiments."
+  },
+  {
+    name: "Figma",
+    status: "studied",
+    evidence: "Used for interface and visual-design exploration."
+  }
+];
+
+
+/* =========================================================
+   PROJECTS (with real GitHub repo links)
+========================================================= */
+
+const projects = [
+
+  {
+    title: "Gorgon-OS-Virtual-Simulator",
+    description:
+      "Phase 1 of a virtual operating system simulator built with Pygame — explores how a VM works, with a terminal and desktop environment.",
+    tags: ["systems", "software"],
+    date: "2025",
+    repo: "https://github.com/Soala7/Gorgon-OS-Virtual-Simulator"
+  },
+
+  {
+    title: "Snake-AI",
+    description:
+      "Deep Q-Learning agent trained to play Snake using PyTorch, Pygame and reinforcement learning.",
+    tags: ["ai", "software"],
+    date: "2025",
+    repo: "https://github.com/Soala7/Snake-AI"
+  },
+
+  {
+    title: "Mini-Kernel",
+    description:
+      "A bootable OS kernel experiment using Docker, QEMU, Makefile and x86 Assembly — learning bootloader and kernel basics.",
+    tags: ["systems", "software"],
+    date: "2025",
+    repo: "https://github.com/Soala7/Mini-Kernel"
+  },
+
+  {
+    title: "Chip8-Emulator",
+    description:
+      "A CHIP-8 emulator written in C — handles CPU instructions, memory, display and input.",
+    tags: ["systems", "software"],
+    date: "2025",
+    repo: "https://github.com/Soala7/Chip8-Emulator"
+  },
+
+  {
+    title: "c-unix-shell",
+    description:
+      "A custom Unix shell written in C — explores process management, command parsing and shell internals.",
+    tags: ["systems", "software"],
+    date: "2025",
+    repo: "https://github.com/Soala7/c-unix-shell"
+  },
+
+  {
+    title: "Chess-game-2.0",
+    description:
+      "A chess game with AI and two-player modes — built with Python and Pygame.",
+    tags: ["software", "ai"],
+    date: "2025",
+    repo: "https://github.com/Soala7/Chess-game-2.0"
+  },
+
+  {
+    title: "Hello-language",
+    description:
+      "A multi-language 'Hello World' collection — contributions welcome.",
+    tags: ["software"],
+    date: "2025",
+    repo: "https://github.com/Soala7/Hello-language"
+  },
+
+  {
+    title: "Pygame",
+    description:
+      "A collection of Python mini-games built with Pygame — beginner-friendly and interactive.",
+    tags: ["software"],
+    date: "2025",
+    repo: "https://github.com/Soala7/Pygame"
+  }
+];
+
+
+/* =========================================================
+   RENDER TECHNOLOGIES
+========================================================= */
+
+function renderTechnologies() {
+
+  const grid = document.getElementById("techGrid");
+
+  grid.innerHTML = "";
+
+  technologies.forEach(tech => {
+
+    const card = document.createElement("div");
+
+    card.className = "card tech-card";
+
+    const statusClass =
+      tech.status === "built"
+        ? "built"
+        : tech.status === "used"
+        ? "used"
+        : tech.status === "learning"
+        ? "learning"
+        : "studied";
+
+    card.innerHTML = `
+      <div class="tech-header">
+
+        <strong>${tech.name}</strong>
+
+        <span class="chip ${statusClass}">
+          ${tech.status}
+        </span>
+
+      </div>
+
+      <div class="tech-evidence">
+        ${tech.evidence}
+      </div>
+    `;
+
+    grid.appendChild(card);
+
+  });
+
+}
+
+
+/* =========================================================
+   RENDER PROJECTS
+========================================================= */
+
+function renderProjects(filter = "all") {
+
+  const list = document.getElementById("projectList");
+
+  list.innerHTML = "";
+
+  const filtered = projects.filter(project => {
+
+    return filter === "all" || project.tags.includes(filter);
+
+  });
+
+  if (!filtered.length) {
+
+    list.innerHTML = `
+      <div class="muted">
+        No projects in this category.
+      </div>
+    `;
+
+    return;
+  }
+
+  filtered.forEach(project => {
+
+    const card = document.createElement("div");
+
+    card.className = "card project";
+
+    card.innerHTML = `
+
+      <div class="project-title">
+
+        <strong>
+          <a href="${project.repo}" target="_blank" rel="noopener noreferrer" style="color:#dce5f0;">
+            ${project.title}
+          </a>
+        </strong>
+
+        <span class="muted small">
+          ${project.date}
+        </span>
+
+      </div>
+
+      <div class="project-description">
+        ${project.description}
+      </div>
+
+      <div class="wrap" style="margin-top:10px;">
+
+        ${project.tags
+          .map(tag => `<span class="chip">${tag}</span>`)
+          .join("")}
+
+        <a href="${project.repo}" target="_blank" rel="noopener noreferrer" style="font-size:0.75rem;color:#86b7f2;">
+          <i class="fab fa-github"></i> repo
+        </a>
+
+      </div>
+
+    `;
+
+    list.appendChild(card);
+
+  });
+
+}
+
+
+/* =========================================================
+   PROJECT FILTERS
+========================================================= */
+
+document.querySelectorAll(".filter-btn").forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    document
+      .querySelectorAll(".filter-btn")
+      .forEach(btn => btn.classList.remove("active"));
+
+    button.classList.add("active");
+
+    renderProjects(button.dataset.filter);
+
+  });
+
+});
+
+
+/* =========================================================
+   SYSTEM DIAGRAM
+========================================================= */
+
+const systemDescriptions = {
+
+  firmware:
+    "Firmware is the low-level software that initializes hardware before the operating system takes over.",
+
+  bootloader:
+    "The bootloader prepares the machine and loads the operating-system kernel into memory.",
+
+  kernel:
+    "The kernel is the privileged core responsible for CPU management, memory, processes, interrupts, storage and hardware access.",
+
+  drivers:
+    "Drivers provide the interface between operating-system software and hardware devices.",
+
+  userspace:
+    "Userspace contains system services, libraries and programs that run outside the privileged kernel.",
+
+  applications:
+    "Applications are programs users interact with, running on top of the operating-system environment."
+
+};
+
+
+document.querySelectorAll(".system-node").forEach(node => {
+
+  node.addEventListener("click", () => {
+
+    const key = node.dataset.system;
+
+    document.getElementById("systemInfo").innerHTML = `
+      <strong>${key.toUpperCase()}</strong><br>
+      ${systemDescriptions[key]}
+    `;
+
+  });
+
+});
+
+
+/* =========================================================
+   TERMINAL
+========================================================= */
+
+const terminalInput =
+  document.getElementById("terminalInput");
+
+const terminalOutput =
+  document.getElementById("terminalOutput");
+
+
+function terminalPrint(text) {
+
+  const line = document.createElement("div");
+
+  line.className = "terminal-line";
+
+  line.innerHTML = text;
+
+  terminalOutput.appendChild(line);
+
+  terminalOutput.scrollTop =
+    terminalOutput.scrollHeight;
+
+}
+
+
+function handleCommand(command) {
+
+  const cmd = command.trim().toLowerCase();
+
+  switch (cmd) {
+
+    case "help":
+
+      terminalPrint(`
+        Available commands:<br>
+        about · skills · projects · systems · education ·
+        github · socials · learning · clear
+      `);
+
+      break;
+
+
+    case "about":
+
+      terminalPrint(`Hi I'm Soala Amachree, being learning systems and programming since 2024. Loved to be an enginner and long as i could remember. I've studied and learnt programming languages, systems, Computer Architecture, AI, electronics, mechanical design, Mathematics and the Sciences. I enjoy building software, exploring operating systems and experimenting with both software and hardware.`);
+
+      break;
+
+
+    case "skills":
+
+      terminalPrint(`
+        Python · C · C++ · JavaScript · HTML/CSS ·
+        Git · Linux · Docker · QEMU · GCC · GDB ·
+        PyTorch · OpenCV · Arduino · KiCad · Fusion 360 ·
+        Onshape · Figma
+      `);
+
+      break;
+
+
+    case "learning":
+
+      terminalPrint(`
+        Currently learning: Rust · x86-64 Assembly ·
+        Operating-system development · Blender ·
+        Robotics · Computer Vision
+      `);
+
+      break;
+
+
+    case "projects":
+
+      terminalPrint(`
+        Gorgon-OS-Virtual-Simulator · Snake-AI ·
+        Mini-Kernel · Chip8-Emulator · c-unix-shell ·
+        Chess-game-2.0 · Pygame 
+      `);
+
+      break;
+
+
+    case "systems":
+
+      terminalPrint(`
+        Operating systems · kernels · bootloaders ·
+        memory · filesystems · virtualization ·
+        QEMU/KVM · x86-64 · C · Assembly
+      `);
+
+      break;
+
+
+    case "education":
+
+      terminalPrint(`
+        WASSCE 2026 · UTME 2026 · CS50P
+      `);
+
+      break;
+
+
+    case "github":
+
+      terminalPrint(`
+        <a href="https://github.com/Soala7"
+        target="_blank"
+        rel="noopener noreferrer">
+        github.com/Soala7
+        </a>
+      `);
+
+      break;
+
+
+    case "socials":
+
+      terminalPrint(`
+        GitHub · X · LinkedIn · TikTok · YouTube
+      `);
+
+      break;
+
+
+    case "clear":
+
+      terminalOutput.innerHTML = "";
+
+      break;
+
+
+    default:
+
+      terminalPrint(
+        `command not found: ${command}`
+      );
+
+  }
+
+}
+
+
+terminalInput.addEventListener("keydown", event => {
+
+  if (event.key !== "Enter") return;
+
+  const command = terminalInput.value.trim();
+
+  if (!command) return;
+
+  terminalPrint(
+    `<span class="terminal-highlight">$ ${command}</span>`
+  );
+
+  handleCommand(command);
+
+  terminalInput.value = "";
+
+});
+
+
+/* =========================================================
+   IMAGE ERROR HANDLING
+========================================================= */
+
+function imageError(image) {
+
+  const container = image.parentElement;
+
+  image.style.display = "none";
+
+  const fallback = document.createElement("div");
+
+  fallback.className = "image-error";
+
+  fallback.textContent = "Image unavailable";
+
+  container.insertBefore(fallback, image);
+
+}
+
+
+/* =========================================================
+   IMAGE MODAL
+========================================================= */
+
+function openImage(source, title) {
+
+  const modal =
+    document.getElementById("imageModal");
+
+  const image =
+    document.getElementById("modalImage");
+
+  const modalTitle =
+    document.getElementById("modalTitle");
+
+  modalTitle.textContent = title;
+
+  image.src = source;
+
+  image.alt = title;
+
+  modal.classList.add("open");
+
+}
+
+
+function closeModal() {
+
+  document
+    .getElementById("imageModal")
+    .classList.remove("open");
+
+}
+
+
+document
+  .getElementById("imageModal")
+  .addEventListener("click", event => {
+
+    if (event.target.id === "imageModal") {
+      closeModal();
+    }
+
+  });
+
+
+document.addEventListener("keydown", event => {
+
+  if (event.key === "Escape") {
+    closeModal();
+  }
+
+});
+
+
+/* =========================================================
+   START
+========================================================= */
+
+renderTechnologies();
+
+renderProjects("all");
+
+</script>
+
+</body>
+</html>

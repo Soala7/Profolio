@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Soala Amachree · Mini-Kernel</title>
+
+    <meta name="description" content="Building a 64-bit x86 kernel from scratch in C and Assembly — bootloader, paging, long mode and VGA output." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #090c11;
+            color: #dce5f0;
+            font-family: "Inter", sans-serif;
+            line-height: 1.7;
+            padding: 24px 16px;
+        }
+
+        a {
+            color: #86b7f2;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #b8d5ff;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .mono {
+            font-family: "JetBrains Mono", monospace;
+        }
+
+        .muted {
+            color: #8492a6;
+        }
+
+        .small {
+            font-size: 0.82rem;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #151d27;
+            border: 1px solid #2a3747;
+            color: #b9c7d7;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.7rem;
+        }
+
+        .chip.used {
+            background: rgba(59, 130, 246, 0.12);
+            border-color: rgba(59, 130, 246, 0.4);
+            color: #8db9ff;
+        }
+
+        .chip.built {
+            background: rgba(34, 197, 94, 0.12);
+            border-color: rgba(34, 197, 94, 0.4);
+            color: #7ee2a8;
+        }
+
+        .chip.learning {
+            background: rgba(245, 158, 11, 0.12);
+            border-color: rgba(245, 158, 11, 0.4);
+            color: #f5c76b;
+        }
+
+        .card {
+            background: #0e141c;
+            border: 1px solid #202a37;
+            border-radius: 16px;
+            padding: 28px 30px;
+            transition: 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: #344356;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .card-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        .card-header .sub {
+            color: #93a7bd;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #8492a6;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+        }
+
+        .back-link:hover {
+            color: #b8d5ff;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            border-bottom: 1px solid #202a37;
+            padding-bottom: 8px;
+            margin-bottom: 14px;
+            margin-top: 6px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            margin-top: 18px;
+            margin-bottom: 8px;
+            color: #d0dcee;
+        }
+
+        p {
+            color: #b6c4d4;
+            margin-bottom: 10px;
+        }
+
+        .flex-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 10px;
+            align-items: center;
+        }
+
+        .action-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 8px 0 4px;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #151d27;
+            border: 1px solid #2a3747;
+            color: #b9c7d7;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            transition: 0.15s;
+        }
+
+        .action-btn:hover {
+            background: #1e2a38;
+            border-color: #4a6a8a;
+            color: white;
+        }
+
+        .action-btn.primary {
+            background: #1a2a3a;
+            border-color: #3a5a7a;
+            color: #b8d5ff;
+        }
+
+        .action-btn.primary:hover {
+            background: #2a4055;
+            border-color: #5a7a9a;
+        }
+
+        .arch-diagram {
+            background: #080d13;
+            border: 1px solid #1e2936;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 12px 0 18px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.85rem;
+            line-height: 2.2;
+            color: #a9b9c9;
+        }
+
+        .arch-diagram .arrow {
+            color: #56687c;
+            margin: 0 6px;
+        }
+
+        .arch-diagram .highlight {
+            color: #d9bd72;
+        }
+
+        .arch-diagram .green {
+            color: #7ee2a8;
+        }
+
+        .arch-diagram .blue {
+            color: #8db9ff;
+        }
+
+        .arch-diagram .purple {
+            color: #c7a1f7;
+        }
+
+        .arch-diagram .yellow {
+            color: #f5c76b;
+        }
+
+        pre {
+            background: #080d13;
+            border: 1px solid #1a2430;
+            border-radius: 10px;
+            padding: 16px 18px;
+            overflow-x: auto;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.78rem;
+            line-height: 1.8;
+            color: #c8d4e0;
+            margin: 10px 0 14px;
+        }
+
+        pre .comment {
+            color: #5a6a7a;
+        }
+        pre .keyword {
+            color: #d9bd72;
+        }
+        pre .function {
+            color: #8db9ff;
+        }
+        pre .string {
+            color: #7ee2a8;
+        }
+        pre .type {
+            color: #c7a1f7;
+        }
+        pre .directive {
+            color: #f5c76b;
+        }
+
+        .demo-terminal {
+            background: #070a0f;
+            border: 1px solid #1e2936;
+            border-radius: 12px;
+            padding: 16px 18px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.8rem;
+            color: #a9b9c9;
+            margin: 10px 0 14px;
+            overflow-x: auto;
+        }
+
+        .demo-terminal .prompt {
+            color: #70a47d;
+        }
+
+        .demo-terminal .cmd {
+            color: #d9bd72;
+        }
+
+        .demo-terminal .output {
+            color: #b0c4de;
+            padding-left: 18px;
+        }
+
+        .demo-terminal .highlight {
+            color: #7ee2a8;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 20px;
+            margin: 8px 0 12px;
+        }
+
+        .feature-grid .item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #b6c4d4;
+            font-size: 0.9rem;
+        }
+
+        .feature-grid .item i {
+            color: #7ee2a8;
+            font-size: 0.75rem;
+        }
+
+        .limitation-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .limitation-list li {
+            color: #b6c4d4;
+            font-size: 0.9rem;
+            padding: 3px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .limitation-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #8492a6;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 12px;
+            margin: 8px 0 4px;
+        }
+
+        .tech-stack .item {
+            background: #111923;
+            border: 1px solid #1f2a36;
+            padding: 4px 14px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            color: #b0c4de;
+        }
+
+        .qemu-display {
+            background: #000000;
+            border: 2px solid #2a3747;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 10px 0 14px;
+            overflow: hidden;
+            aspect-ratio: 16 / 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .qemu-display img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 8px;
+            transform: scale(1.08);
+            transform-origin: center;
+            background: #0a0a0a;
+        }
+
+        .qemu-display .screen-content {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 1.2rem;
+            color: #7ee2a8;
+            padding: 20px;
+            line-height: 1.8;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #0a0a0a;
+        }
+
+        .qemu-display .screen-content .header {
+            color: #8db9ff;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .qemu-display .screen-content .sub {
+            color: #f5c76b;
+            font-size: 1rem;
+        }
+
+        .qemu-display .screen-content .info {
+            color: #8492a6;
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+
+        .qemu-display .screen-content .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background: #7ee2a8;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .qemu-display .screen-content .line {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .qemu-display .screen-content .line .label {
+            color: #70a47d;
+            min-width: 60px;
+        }
+
+        .qemu-display .screen-content .line .value {
+            color: #b0c4de;
+        }
+
+        .qemu-display .screen-content .line .value.green {
+            color: #7ee2a8;
+        }
+
+        .divider {
+            border: 0;
+            border-top: 1px solid #1a2430;
+            margin: 18px 0;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px 24px;
+            color: #8392a4;
+            font-size: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #8392a4;
+        }
+
+        .footer-links a:hover {
+            color: #b8d5ff;
+        }
+
+        .file-tree {
+            background: #080d13;
+            border: 1px solid #1a2430;
+            border-radius: 10px;
+            padding: 16px 20px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.78rem;
+            line-height: 1.9;
+            color: #a9b9c9;
+            margin: 8px 0 14px;
+            overflow-x: auto;
+        }
+
+        .file-tree .dir {
+            color: #8db9ff;
+        }
+
+        .file-tree .file {
+            color: #b0c4de;
+        }
+
+        .file-tree .highlight {
+            color: #d9bd72;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 14px 10px;
+            }
+            .card {
+                padding: 18px 16px;
+            }
+            .card-header h1 {
+                font-size: 1.6rem;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            .arch-diagram {
+                font-size: 0.75rem;
+                padding: 14px 16px;
+            }
+            pre {
+                font-size: 0.7rem;
+                padding: 12px 14px;
+            }
+            .file-tree {
+                font-size: 0.7rem;
+                padding: 12px 14px;
+            }
+            .qemu-display .screen-content {
+                font-size: 0.9rem;
+                padding: 12px;
+            }
+            .qemu-display .screen-content .header {
+                font-size: 1.1rem;
+            }
+            .qemu-display .screen-content .line {
+                flex-direction: column;
+                gap: 2px;
+            }
+            .qemu-display .screen-content .line .label {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Back link -->
+        <a href="../index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i> back to portfolio
+        </a>
+
+        <!-- Main content -->
+        <div class="card">
+
+            <div class="card-header">
+                <div>
+                    <h1>Mini-Kernel</h1>
+                    <div class="sub">A small experimental 64-bit x86 kernel built from scratch in C and Assembly.</div>
+                </div>
+                <div class="flex-wrap">
+                    <span class="chip used">C</span>
+                    <span class="chip used">x86 Assembly</span>
+                    <span class="chip used">NASM</span>
+                    <span class="chip used">Make</span>
+                    <span class="chip used">Docker</span>
+                    <span class="chip built">2025</span>
+                </div>
+            </div>
+
+            <!-- Action links -->
+            <div class="action-links">
+                <a href="https://github.com/Soala7/Mini-Kernel" target="_blank" rel="noopener noreferrer" class="action-btn primary">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+                <a href="#demo" class="action-btn">
+                    <i class="fas fa-play"></i> Watch Demo
+                </a>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Overview -->
+            <h2>Overview</h2>
+            <p>
+                This is a small experimental 64-bit x86 kernel built from scratch in C and Assembly. The project follows the early stages of OS development: creating a bootable kernel, setting up the CPU for 64-bit long mode, configuring paging, and writing directly to VGA text memory.
+            </p>
+            <p class="muted small">
+                <i class="fas fa-info-circle"></i> This project is part of my learning process toward building Gorgon VOS.
+            </p>
+
+            <!-- QEMU Display -->
+            <h2 id="demo">Running in QEMU</h2>
+            <p>
+                The kernel boots successfully in QEMU and displays output directly to VGA text memory:
+            </p>
+
+            <div class="qemu-display">
+                <img src="../assets/mini-kernel-demo.png" alt="Mini-kernel running in QEMU" loading="lazy">
+            </div>
+
+            <!-- Architecture -->
+            <h2>How It Works</h2>
+            <p>
+                The kernel starts in 32-bit protected mode after being loaded by GRUB. The Assembly boot code then performs a series of steps to transition the CPU into 64-bit long mode:
+            </p>
+
+            <div class="arch-diagram">
+                <span class="yellow">GRUB</span> — loads kernel into memory<br>
+                <span class="arrow">↓</span><br>
+                <span class="blue">header.asm</span> — Multiboot2 header<br>
+                <span class="arrow">↓</span><br>
+                <span class="blue">main.asm</span> — boot entry point<br>
+                <span class="arrow">↓</span><br>
+                <span class="highlight">1.</span> Verify Multiboot2 environment<br>
+                <span class="arrow">↓</span><br>
+                <span class="highlight">2.</span> Check for CPUID support<br>
+                <span class="arrow">↓</span><br>
+                <span class="highlight">3.</span> Check for x86_64 long mode support<br>
+                <span class="arrow">↓</span><br>
+                <span class="highlight">4.</span> Create initial page tables<br>
+                <span class="arrow">↓</span><br>
+                <span class="highlight">5.</span> Enable PAE (Physical Address Extension)<br>
+                <span class="arrow">↓</span><br>
+                <span class="highlight">6.</span> Enable long mode via EFER MSR<br>
+                <span class="arrow">↓</span><br>
+                <span class="highlight">7.</span> Enable paging<br>
+                <span class="arrow">↓</span><br>
+                <span class="highlight">8.</span> Load 64-bit GDT<br>
+                <span class="arrow">↓</span><br>
+                <span class="green">main64.asm</span> — enter 64-bit mode<br>
+                <span class="arrow">↓</span><br>
+                <span class="blue">main.c</span> — C kernel entry point<br>
+                <span class="arrow">↓</span><br>
+                <span class="purple">VGA Text Output</span> — prints to screen
+            </div>
+
+            <!-- Features -->
+            <h2>Features</h2>
+            <div class="feature-grid">
+                <div class="item"><i class="fas fa-check-circle"></i> Multiboot2 boot header</div>
+                <div class="item"><i class="fas fa-check-circle"></i> x86 Assembly boot code</div>
+                <div class="item"><i class="fas fa-check-circle"></i> CPU capability checks</div>
+                <div class="item"><i class="fas fa-check-circle"></i> CPUID detection</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Long mode detection</div>
+                <div class="item"><i class="fas fa-check-circle"></i> x86_64 GDT setup</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Initial page tables</div>
+                <div class="item"><i class="fas fa-check-circle"></i> 64-bit long mode transition</div>
+                <div class="item"><i class="fas fa-check-circle"></i> C kernel entry point</div>
+                <div class="item"><i class="fas fa-check-circle"></i> VGA text-mode output</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Character &amp; string printing</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Screen clearing &amp; scrolling</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Foreground/background colors</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Bootable GRUB ISO</div>
+                <div class="item"><i class="fas fa-check-circle"></i> QEMU testing</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Docker-based cross-compilation</div>
+                <div class="item"><i class="fas fa-check-circle"></i> x86_64 ELF kernel</div>
+            </div>
+
+            <!-- File Structure -->
+            <h2>Project Structure</h2>
+            <div class="file-tree">
+                <span class="dir">mimi_kernel/</span><br>
+                ├── <span class="dir">build/</span><br>
+                │   └── <span class="dir">x86_64/</span><br>
+                ├── <span class="dir">buildenv/</span><br>
+                │   └── <span class="file">Dockerfile</span><br>
+                ├── <span class="dir">dist/</span><br>
+                │   └── <span class="dir">x86_64/</span><br>
+                │       ├── <span class="file highlight">gorgon.iso</span><br>
+                │       └── <span class="file">kernel.bin</span><br>
+                ├── <span class="dir">src/</span><br>
+                │   ├── <span class="dir">impl/</span><br>
+                │   │   ├── <span class="dir">kernel/</span><br>
+                │   │   │   └── <span class="file">main.c</span><br>
+                │   │   └── <span class="dir">x86_64/</span><br>
+                │   │       ├── <span class="dir">boot/</span><br>
+                │   │       │   ├── <span class="file">header.asm</span><br>
+                │   │       │   ├── <span class="file">main.asm</span><br>
+                │   │       │   └── <span class="file">main64.asm</span><br>
+                │   │       └── <span class="file">print.c</span><br>
+                │   └── <span class="dir">intf/</span><br>
+                │       └── <span class="file">print.h</span><br>
+                ├── <span class="dir">targets/</span><br>
+                │   └── <span class="dir">x86_64/</span><br>
+                │       ├── <span class="dir">iso/</span><br>
+                │       │   └── <span class="dir">boot/</span><br>
+                │       │       ├── <span class="dir">grub/</span><br>
+                │       │       │   └── <span class="file">grub.cfg</span><br>
+                │       │       └── <span class="file">kernel.bin</span><br>
+                │       └── <span class="file">linker.ld</span><br>
+                ├── <span class="file">Makefile</span><br>
+                └── <span class="file">README.md</span>
+            </div>
+
+            <!-- Implementation -->
+            <h2>Implementation Details</h2>
+
+            <h3>1. Multiboot2 Header</h3>
+            <p>
+                The kernel starts with a Multiboot2 header that GRUB uses to identify and load the kernel. The header includes architecture flags and ensures the kernel is loaded at the correct memory address.
+            </p>
+
+            <h3>2. Boot Assembly</h3>
+            <p>
+                The <code class="mono">main.asm</code> file contains the 32-bit boot code that performs CPU capability checks and transitions to 64-bit mode. It uses the <code class="mono">CPUID</code> instruction to verify the CPU supports long mode and PAE.
+            </p>
+
+            <h3>3. Paging Setup</h3>
+            <p>
+                The boot code creates identity-mapped page tables that map the first 2MB of physical memory. This is sufficient for the kernel to run in 64-bit mode with paging enabled.
+            </p>
+
+            <h3>4. 64-bit Transition</h3>
+            <p>
+                The kernel enables PAE, sets the long mode bit in the EFER MSR, and enables paging. It then loads a 64-bit GDT and performs a far jump into the 64-bit code segment.
+            </p>
+
+            <h3>5. C Kernel Entry</h3>
+            <p>
+                The <code class="mono">main.c</code> file contains the C entry point for the kernel. It initializes the VGA text buffer and prints messages to the screen using the <code class="mono">print.h</code> interface.
+            </p>
+
+            <h3>6. VGA Text Output</h3>
+            <p>
+                The kernel writes directly to the VGA text buffer at <code class="mono">0xB8000</code>. Each character is 2 bytes: the ASCII value and an attribute byte for color. The screen is configured as 80 columns × 25 rows.
+            </p>
+
+            <!-- Building -->
+            <h2>Building</h2>
+            <p>
+                The project uses Docker to provide a controlled kernel-development environment. The container contains all the tools required to build the kernel.
+            </p>
+
+            <div class="demo-terminal">
+                <div><span class="prompt">$</span> <span class="cmd">git clone https://github.com/Soala7/Mini-Kernel</span></div>
+                <div><span class="prompt">$</span> <span class="cmd">cd Mini-Kernel</span></div>
+                <div><span class="prompt">$</span> <span class="cmd">docker build -t mini_kernel:latest buildenv</span></div>
+                <div class="output">Building Docker image...</div>
+                <div><span class="prompt">$</span> <span class="cmd">docker run -it --rm -v "$(pwd):/root/env" mini_kernel:latest</span></div>
+                <div class="output">Entering build environment...</div>
+                <div><span class="prompt">#</span> <span class="cmd">make build-x86_64</span></div>
+                <div class="output">Building kernel...</div>
+                <div class="output">[OK] kernel.bin created</div>
+                <div class="output">[OK] gorgon.iso created</div>
+                <div><span class="prompt">$</span> <span class="cmd">qemu-system-x86_64 -cdrom dist/x86_64/gorgon.iso</span></div>
+                <div class="output" style="color:#7ee2a8;">✦ Mini Kernel booting... ✦</div>
+            </div>
+
+            <!-- What I Learned -->
+            <h2>What I Learned</h2>
+            <p>
+                This project helped me understand the lower-level relationship between:
+            </p>
+
+            <div class="arch-diagram">
+                <span class="yellow">Bootloader</span><br>
+                <span class="arrow">↓</span><br>
+                <span class="blue">CPU</span><br>
+                <span class="arrow">↓</span><br>
+                <span class="green">Assembly</span><br>
+                <span class="arrow">↓</span><br>
+                <span class="highlight">GDT</span><br>
+                <span class="arrow">↓</span><br>
+                <span class="purple">Paging</span><br>
+                <span class="arrow">↓</span><br>
+                <span class="blue">64-bit Long Mode</span><br>
+                <span class="arrow">↓</span><br>
+                <span class="green">C Kernel</span><br>
+                <span class="arrow">↓</span><br>
+                <span class="yellow">Hardware / VGA Memory</span>
+            </div>
+
+            <ul style="color:#b6c4d4; padding-left:20px; margin-bottom:10px;">
+                <li>How the CPU transitions from 16-bit real mode → 32-bit protected mode → 64-bit long mode</li>
+                <li>How GRUB and the Multiboot2 standard work</li>
+                <li>How to set up GDT entries for 64-bit code and data segments</li>
+                <li>How paging and PAE work on x86_64</li>
+                <li>How to write directly to VGA text memory</li>
+                <li>How to combine Assembly and C into a bootable kernel</li>
+                <li>How to use Docker for cross-compilation toolchains</li>
+            </ul>
+
+            <!-- Challenges -->
+            <h2>Challenges</h2>
+            <ul style="color:#b6c4d4; padding-left:20px; margin-bottom:10px;">
+                <li>Understanding the x86_64 memory model and paging structure</li>
+                <li>Getting the linker script correct for the 64-bit kernel</li>
+                <li>Debugging the transition from 32-bit to 64-bit mode</li>
+                <li>Setting up the Docker build environment with the correct toolchain</li>
+                <li>Understanding the GRUB boot process and Multiboot2 standard</li>
+                <li>Handling the GDT and segment registers correctly in 64-bit mode</li>
+            </ul>
+
+            <!-- Current Status -->
+            <h2>Current Status</h2>
+            <p>
+                <span class="chip built"><i class="fas fa-check"></i> Bootable x86_64 kernel — working</span>
+            </p>
+            <p>
+                The kernel successfully builds into a bootable GRUB ISO and can be launched with QEMU. This is an early kernel-development project and is intentionally kept small while I learn the underlying concepts.
+            </p>
+
+            <!-- Tech Stack -->
+            <hr class="divider">
+            <div class="tech-stack">
+                <span class="item">C</span>
+                <span class="item">x86 Assembly</span>
+                <span class="item">NASM</span>
+                <span class="item">Make</span>
+                <span class="item">GNU Binutils</span>
+                <span class="item">GCC</span>
+                <span class="item">GRUB / Multiboot2</span>
+                <span class="item">QEMU</span>
+                <span class="item">Docker</span>
+                <span class="item">x86_64 Architecture</span>
+            </div>
+
+            <p class="muted small" style="margin-top:12px;">
+                <i class="fas fa-code"></i> Written in C and x86 Assembly, bootable via GRUB.
+            </p>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-links">
+            <a href="../index.html"><i class="fas fa-home"></i> soala.dev</a>
+            <a href="https://github.com/Soala7" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a>
+            <a href="https://www.linkedin.com/in/soala-amachree" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i> LinkedIn</a>
+            <span class="muted">Static HTML · CSS · JavaScript</span>
+        </div>
+
+    </div>
+
+</body>
+</html>

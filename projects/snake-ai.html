@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Soala Amachree · Snake AI (DQN)</title>
+
+    <meta name="description" content="Deep Q-Learning Snake AI built with Python, PyTorch, and Pygame — reinforcement learning agent that learns to play Snake." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #090c11;
+            color: #dce5f0;
+            font-family: "Inter", sans-serif;
+            line-height: 1.7;
+            padding: 24px 16px;
+        }
+
+        a {
+            color: #86b7f2;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #b8d5ff;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .mono {
+            font-family: "JetBrains Mono", monospace;
+        }
+
+        .muted {
+            color: #8492a6;
+        }
+
+        .small {
+            font-size: 0.82rem;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #151d27;
+            border: 1px solid #2a3747;
+            color: #b9c7d7;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.7rem;
+        }
+
+        .chip.used {
+            background: rgba(59, 130, 246, 0.12);
+            border-color: rgba(59, 130, 246, 0.4);
+            color: #8db9ff;
+        }
+
+        .chip.built {
+            background: rgba(34, 197, 94, 0.12);
+            border-color: rgba(34, 197, 94, 0.4);
+            color: #7ee2a8;
+        }
+
+        .chip.learning {
+            background: rgba(245, 158, 11, 0.12);
+            border-color: rgba(245, 158, 11, 0.4);
+            color: #f5c76b;
+        }
+
+        .card {
+            background: #0e141c;
+            border: 1px solid #202a37;
+            border-radius: 16px;
+            padding: 28px 30px;
+            transition: 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: #344356;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .card-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        .card-header .sub {
+            color: #93a7bd;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #8492a6;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+        }
+
+        .back-link:hover {
+            color: #b8d5ff;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            border-bottom: 1px solid #202a37;
+            padding-bottom: 8px;
+            margin-bottom: 14px;
+            margin-top: 6px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            margin-top: 18px;
+            margin-bottom: 8px;
+            color: #d0dcee;
+        }
+
+        p {
+            color: #b6c4d4;
+            margin-bottom: 10px;
+        }
+
+        .flex-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 10px;
+            align-items: center;
+        }
+
+        .action-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 8px 0 4px;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #151d27;
+            border: 1px solid #2a3747;
+            color: #b9c7d7;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            transition: 0.15s;
+        }
+
+        .action-btn:hover {
+            background: #1e2a38;
+            border-color: #4a6a8a;
+            color: white;
+        }
+
+        .action-btn.primary {
+            background: #1a2a3a;
+            border-color: #3a5a7a;
+            color: #b8d5ff;
+        }
+
+        .action-btn.primary:hover {
+            background: #2a4055;
+            border-color: #5a7a9a;
+        }
+
+        .arch-diagram {
+            background: #080d13;
+            border: 1px solid #1e2936;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 12px 0 18px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.85rem;
+            line-height: 2.2;
+            color: #a9b9c9;
+        }
+
+        .arch-diagram .arrow {
+            color: #56687c;
+            margin: 0 6px;
+        }
+
+        .arch-diagram .highlight {
+            color: #d9bd72;
+        }
+
+        .arch-diagram .green {
+            color: #7ee2a8;
+        }
+
+        .arch-diagram .blue {
+            color: #8db9ff;
+        }
+
+        .arch-diagram .purple {
+            color: #c7a1f7;
+        }
+
+        .arch-diagram .yellow {
+            color: #f5c76b;
+        }
+
+        pre {
+            background: #080d13;
+            border: 1px solid #1a2430;
+            border-radius: 10px;
+            padding: 16px 18px;
+            overflow-x: auto;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.78rem;
+            line-height: 1.8;
+            color: #c8d4e0;
+            margin: 10px 0 14px;
+        }
+
+        pre .comment {
+            color: #5a6a7a;
+        }
+        pre .keyword {
+            color: #d9bd72;
+        }
+        pre .function {
+            color: #8db9ff;
+        }
+        pre .string {
+            color: #7ee2a8;
+        }
+        pre .type {
+            color: #c7a1f7;
+        }
+        pre .directive {
+            color: #f5c76b;
+        }
+
+        .demo-terminal {
+            background: #070a0f;
+            border: 1px solid #1e2936;
+            border-radius: 12px;
+            padding: 16px 18px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.8rem;
+            color: #a9b9c9;
+            margin: 10px 0 14px;
+            overflow-x: auto;
+        }
+
+        .demo-terminal .prompt {
+            color: #70a47d;
+        }
+
+        .demo-terminal .cmd {
+            color: #d9bd72;
+        }
+
+        .demo-terminal .output {
+            color: #b0c4de;
+            padding-left: 18px;
+        }
+
+        .demo-terminal .highlight {
+            color: #7ee2a8;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 20px;
+            margin: 8px 0 12px;
+        }
+
+        .feature-grid .item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #b6c4d4;
+            font-size: 0.9rem;
+        }
+
+        .feature-grid .item i {
+            color: #7ee2a8;
+            font-size: 0.75rem;
+        }
+
+        .limitation-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .limitation-list li {
+            color: #b6c4d4;
+            font-size: 0.9rem;
+            padding: 3px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .limitation-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #8492a6;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 12px;
+            margin: 8px 0 4px;
+        }
+
+        .tech-stack .item {
+            background: #111923;
+            border: 1px solid #1f2a36;
+            padding: 4px 14px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            color: #b0c4de;
+        }
+
+        .video-container {
+            background: #080d13;
+            border: 1px solid #1e2936;
+            border-radius: 12px;
+            padding: 0;
+            margin: 10px 0 14px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .video-container video {
+            width: 100%;
+            display: block;
+            background: #0a0a0a;
+        }
+
+        .video-container .video-fallback {
+            padding: 60px 20px;
+            text-align: center;
+            color: #687789;
+            background: #0a0a0a;
+        }
+
+        .video-container .video-fallback i {
+            font-size: 3rem;
+            color: #4a5a6a;
+            margin-bottom: 10px;
+        }
+
+        .video-container .video-fallback .note {
+            font-size: 0.8rem;
+            color: #5a6a7a;
+        }
+
+        .file-tree {
+            background: #080d13;
+            border: 1px solid #1a2430;
+            border-radius: 10px;
+            padding: 16px 20px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.78rem;
+            line-height: 1.9;
+            color: #a9b9c9;
+            margin: 8px 0 14px;
+            overflow-x: auto;
+        }
+
+        .file-tree .dir {
+            color: #8db9ff;
+        }
+
+        .file-tree .file {
+            color: #b0c4de;
+        }
+
+        .file-tree .highlight {
+            color: #d9bd72;
+        }
+
+        .divider {
+            border: 0;
+            border-top: 1px solid #1a2430;
+            margin: 18px 0;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px 24px;
+            color: #8392a4;
+            font-size: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #8392a4;
+        }
+
+        .footer-links a:hover {
+            color: #b8d5ff;
+        }
+
+        .gif-container {
+            background: #080d13;
+            border: 1px solid #1e2936;
+            border-radius: 12px;
+            padding: 0;
+            margin: 10px 0 14px;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .gif-container img {
+            max-width: 100%;
+            display: block;
+            margin: 0 auto;
+            background: #0a0a0a;
+        }
+
+        .gif-container .caption {
+            padding: 8px 12px;
+            font-size: 0.78rem;
+            color: #8492a6;
+            border-top: 1px solid #1a2430;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 14px 10px;
+            }
+            .card {
+                padding: 18px 16px;
+            }
+            .card-header h1 {
+                font-size: 1.6rem;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            .arch-diagram {
+                font-size: 0.75rem;
+                padding: 14px 16px;
+            }
+            pre {
+                font-size: 0.7rem;
+                padding: 12px 14px;
+            }
+            .file-tree {
+                font-size: 0.7rem;
+                padding: 12px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Back link -->
+        <a href="../index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i> back to portfolio
+        </a>
+
+        <!-- Main content -->
+        <div class="card">
+
+            <div class="card-header">
+                <div>
+                    <h1>Snake AI — Deep Q-Learning</h1>
+                    <div class="sub">A classic Snake game powered by Deep Reinforcement Learning. The agent learns to navigate, find food, and avoid collisions.</div>
+                </div>
+                <div class="flex-wrap">
+                    <span class="chip used">Python</span>
+                    <span class="chip used">PyTorch</span>
+                    <span class="chip used">Pygame</span>
+                    <span class="chip used">NumPy</span>
+                    <span class="chip used">Matplotlib</span>
+                    <span class="chip built">2025</span>
+                </div>
+            </div>
+
+            <!-- Action links -->
+            <div class="action-links">
+                <a href="https://github.com/Soala7/Snake-AI" target="_blank" rel="noopener noreferrer" class="action-btn primary">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+                <a href="#demo" class="action-btn">
+                    <i class="fas fa-play"></i> Watch Demo
+                </a>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Overview -->
+            <h2>Overview</h2>
+            <p>
+                This project implements a Deep Q-Learning (DQN) agent that learns to play the classic Snake game. The agent observes the game state, makes decisions using a neural network, and improves its performance through repeated gameplay. The project demonstrates key reinforcement learning concepts including experience replay, reward shaping, and neural network-based decision making.
+            </p>
+
+            <!-- Demo Video -->
+            <h2 id="demo">Gameplay Demo</h2>
+            <p>
+                The trained AI playing Snake in real time:
+            </p>
+
+            <div class="video-container">
+                <video controls autoplay loop muted playsinline>
+                    <source src="../assets/snake.mp4" type="video/mp4">
+                    <div class="video-fallback">
+                        <i class="fas fa-play-circle"></i>
+                        <div style="font-weight:500; color:#9aabba;">🎮 Snake AI Gameplay</div>
+                        <div class="note">Your browser doesn't support the video tag.</div>
+                        <div class="note" style="margin-top:6px;">Download the video or view the GIF below.</div>
+                    </div>
+                </video>
+            </div>
+
+            <div class="gif-container">
+                <img src="../assets/snake.gif" alt="Snake AI Gameplay Animation" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <div style="display:none; padding:20px; color:#687789;">
+                    <i class="fas fa-image" style="font-size:2rem; display:block; margin-bottom:8px;"></i>
+                    GIF unavailable — view the video above.
+                </div>
+                <div class="caption">AI agent playing Snake after training</div>
+            </div>
+
+            <!-- Features -->
+            <h2>Features</h2>
+            <div class="feature-grid">
+                <div class="item"><i class="fas fa-check-circle"></i> Deep Q-Learning (DQN) with PyTorch</div>
+                <div class="item"><i class="fas fa-check-circle"></i> 16-feature state representation</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Danger detection (3 directions)</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Movement direction awareness</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Food position tracking</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Body length &amp; tail awareness</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Reward shaping for efficient movement</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Experience replay memory</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Short-term &amp; long-term training</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Model persistence &amp; checkpointing</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Live training metrics with Matplotlib</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Record score tracking</div>
+            </div>
+
+            <!-- Project Structure -->
+            <h2>Project Structure</h2>
+            <div class="file-tree">
+                <span class="dir">Snake/</span><br>
+                ├── <span class="file highlight">agent.py</span> — AI agent and training loop<br>
+                ├── <span class="file highlight">snake.py</span> — Snake game environment<br>
+                ├── <span class="file highlight">model.py</span> — Neural network and Q-learning trainer<br>
+                ├── <span class="file">helper.py</span> — Training visualization<br>
+                ├── <span class="file">snake.png</span> — Gameplay screenshot<br>
+                ├── <span class="file">snake.gif</span> — Gameplay animation<br>
+                ├── <span class="file">snake.mp4</span> — Gameplay recording<br>
+                ├── <span class="dir">Graphics/</span><br>
+                │   └── <span class="file">food.png</span><br>
+                ├── <span class="dir">Sounds/</span><br>
+                │   ├── <span class="file">eat.mp3</span><br>
+                │   ├── <span class="file">Sounds_wall.mp3</span><br>
+                │   └── <span class="file">wall.mp3</span><br>
+                ├── <span class="dir">__pycache__/</span><br>
+                └── <span class="dir">model/</span><br>
+                    └── <span class="file highlight">model.pth</span> — Saved neural network
+            </div>
+
+            <!-- How It Works -->
+            <h2>How It Works</h2>
+
+            <h3>1. State Representation</h3>
+            <p>
+                The agent observes 16 features from the game state:
+            </p>
+            <ul style="color:#b6c4d4; padding-left:20px; margin-bottom:10px;">
+                <li>Danger straight ahead</li>
+                <li>Danger to the right</li>
+                <li>Danger to the left</li>
+                <li>Current direction (up, down, left, right)</li>
+                <li>Food position relative to snake head</li>
+                <li>Food distance</li>
+                <li>Body length</li>
+                <li>Tail position relative to head</li>
+            </ul>
+
+            <h3>2. Neural Network Architecture</h3>
+            <p>
+                The DQN uses a feedforward neural network with three hidden layers:
+            </p>
+            <div class="arch-diagram">
+                <span class="blue">Input</span> (16 features)<br>
+                <span class="arrow">↓</span><br>
+                <span class="yellow">Layer 1</span> (256 neurons + ReLU)<br>
+                <span class="arrow">↓</span><br>
+                <span class="yellow">Layer 2</span> (256 neurons + ReLU)<br>
+                <span class="arrow">↓</span><br>
+                <span class="yellow">Layer 3</span> (128 neurons + ReLU)<br>
+                <span class="arrow">↓</span><br>
+                <span class="green">Output</span> (3 actions: straight, left, right)
+            </div>
+
+            <h3>3. Training Process</h3>
+            <p>
+                The agent learns through repeated episodes:
+            </p>
+            <div class="arch-diagram">
+                <span class="blue">Initialize</span> — set hyperparameters, load model<br>
+                <span class="arrow">↓</span><br>
+                <span class="yellow">For each episode</span> — reset game state<br>
+                <span class="arrow">↓</span><br>
+                <span class="highlight">1.</span> Get current state (16 features)<br>
+                <span class="arrow">↓</span><br>
+                <span class="highlight">2.</span> Choose action (ε-greedy policy)<br>
+                <span class="arrow">↓</span><br>
+                <span class="highlight">3.</span> Execute action, observe reward<br>
+                <span class="arrow">↓</span><br>
+                <span class="highlight">4.</span> Store experience in replay memory<br>
+                <span class="arrow">↓</span><br>
+                <span class="highlight">5.</span> Sample batch and train network<br>
+                <span class="arrow">↓</span><br>
+                <span class="highlight">6.</span> Update target network periodically<br>
+                <span class="arrow">↓</span><br>
+                <span class="green">Save</span> — checkpoint when new record achieved
+            </div>
+
+            <!-- Implementation -->
+            <h2>Implementation Details</h2>
+
+            <h3>1. Agent (<code>agent.py</code>)</h3>
+            <p>
+                The agent implements the DQN training loop. It manages the exploration-exploitation tradeoff using an epsilon-greedy policy, stores experiences in replay memory, and orchestrates the training process.
+            </p>
+
+            <h3>2. Game Environment (<code>snake.py</code>)</h3>
+            <p>
+                The Snake game is built with Pygame. It provides the game state, handles movement, collision detection, and renders the game. The environment returns the current state, reward, and whether the game is done.
+            </p>
+
+            <h3>3. Neural Network (<code>model.py</code>)</h3>
+            <p>
+                The neural network is implemented in PyTorch. It consists of three linear layers with ReLU activations. The Q-learning trainer handles backpropagation, loss calculation, and network updates.
+            </p>
+
+            <h3>4. Training Visualization (<code>helper.py</code>)</h3>
+            <p>
+                The helper module uses Matplotlib to plot training metrics, including score progression and running average score, providing insight into the agent's learning progress.
+            </p>
+
+            <!-- Demo Terminal -->
+            <h2>Running the Training</h2>
+            <div class="demo-terminal">
+                <div><span class="prompt">$</span> <span class="cmd">python agent.py</span></div>
+                <div class="output">Starting Snake AI training...</div>
+                <div class="output">Loading model from model/model.pth</div>
+                <div class="output">Episode 1   | Score: 2   | Epsilon: 0.900</div>
+                <div class="output">Episode 10  | Score: 8   | Epsilon: 0.800</div>
+                <div class="output">Episode 50  | Score: 15  | Epsilon: 0.500</div>
+                <div class="output">Episode 100 | Score: 28  | Epsilon: 0.200</div>
+                <div class="output">Episode 200 | Score: 42  | Epsilon: 0.050</div>
+                <div class="output" style="color:#7ee2a8;">[NEW RECORD] Score: 42 — Model saved!</div>
+                <div class="output">Episode 300 | Score: 38  | Epsilon: 0.010</div>
+                <div class="output">Training complete. Final score: 42</div>
+            </div>
+
+            <!-- What I Learned -->
+            <h2>What I Learned</h2>
+            <ul style="color:#b6c4d4; padding-left:20px; margin-bottom:10px;">
+                <li>How Deep Q-Learning works for reinforcement learning problems</li>
+                <li>How to design state representations for game AI</li>
+                <li>How reward shaping influences agent behavior</li>
+                <li>How experience replay stabilizes training</li>
+                <li>How to implement a neural network with PyTorch</li>
+                <li>How to visualize training progress with Matplotlib</li>
+                <li>How to balance exploration and exploitation with epsilon-greedy</li>
+            </ul>
+
+            <!-- Challenges -->
+            <h2>Challenges</h2>
+            <ul style="color:#b6c4d4; padding-left:20px; margin-bottom:10px;">
+                <li>Designing effective state features for the agent</li>
+                <li>Tuning hyperparameters for stable learning</li>
+                <li>Handling the delayed reward problem in Snake</li>
+                <li>Implementing tail awareness to prevent self-collision</li>
+                <li>Optimizing training performance for faster learning</li>
+            </ul>
+
+            <!-- Limitations -->
+            <h2>Limitations</h2>
+            <ul class="limitation-list">
+                <li>Training can take hundreds of episodes to reach high scores</li>
+                <li>Agent may get stuck in local optima</li>
+                <li>No transfer learning — each environment requires retraining</li>
+                <li>Simple game environment — no obstacles or advanced mechanics</li>
+            </ul>
+
+            <!-- Tech Stack -->
+            <hr class="divider">
+            <div class="tech-stack">
+                <span class="item">Python</span>
+                <span class="item">PyTorch</span>
+                <span class="item">Pygame</span>
+                <span class="item">NumPy</span>
+                <span class="item">Matplotlib</span>
+                <span class="item">Deep Q-Learning</span>
+                <span class="item">Reinforcement Learning</span>
+                <span class="item">Experience Replay</span>
+            </div>
+
+            <p class="muted small" style="margin-top:12px;">
+                <i class="fas fa-code"></i> ~400 lines of Python using PyTorch for reinforcement learning.
+            </p>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-links">
+            <a href="../index.html"><i class="fas fa-home"></i> soala.dev</a>
+            <a href="https://github.com/Soala7" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a>
+            <a href="https://www.linkedin.com/in/soala-amachree" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i> LinkedIn</a>
+            <span class="muted">Static HTML · CSS · JavaScript</span>
+        </div>
+
+    </div>
+
+</body>
+</html>

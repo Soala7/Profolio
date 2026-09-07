@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Soala Amachree · CHIP-8 Emulator</title>
+
+    <meta name="description" content="Building a CHIP-8 emulator in C — CPU emulation, memory, display, input and audio." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #090c11;
+            color: #dce5f0;
+            font-family: "Inter", sans-serif;
+            line-height: 1.7;
+            padding: 24px 16px;
+        }
+
+        a {
+            color: #86b7f2;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #b8d5ff;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .mono {
+            font-family: "JetBrains Mono", monospace;
+        }
+
+        .muted {
+            color: #8492a6;
+        }
+
+        .small {
+            font-size: 0.82rem;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #151d27;
+            border: 1px solid #2a3747;
+            color: #b9c7d7;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.7rem;
+        }
+
+        .chip.used {
+            background: rgba(59, 130, 246, 0.12);
+            border-color: rgba(59, 130, 246, 0.4);
+            color: #8db9ff;
+        }
+
+        .chip.built {
+            background: rgba(34, 197, 94, 0.12);
+            border-color: rgba(34, 197, 94, 0.4);
+            color: #7ee2a8;
+        }
+
+        .card {
+            background: #0e141c;
+            border: 1px solid #202a37;
+            border-radius: 16px;
+            padding: 28px 30px;
+            transition: 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: #344356;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .card-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        .card-header .sub {
+            color: #93a7bd;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #8492a6;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+        }
+
+        .back-link:hover {
+            color: #b8d5ff;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            border-bottom: 1px solid #202a37;
+            padding-bottom: 8px;
+            margin-bottom: 14px;
+            margin-top: 6px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            margin-top: 18px;
+            margin-bottom: 8px;
+            color: #d0dcee;
+        }
+
+        p {
+            color: #b6c4d4;
+            margin-bottom: 10px;
+        }
+
+        .flex-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 10px;
+            align-items: center;
+        }
+
+        .action-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 8px 0 4px;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #151d27;
+            border: 1px solid #2a3747;
+            color: #b9c7d7;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            transition: 0.15s;
+        }
+
+        .action-btn:hover {
+            background: #1e2a38;
+            border-color: #4a6a8a;
+            color: white;
+        }
+
+        .action-btn.primary {
+            background: #1a2a3a;
+            border-color: #3a5a7a;
+            color: #b8d5ff;
+        }
+
+        .action-btn.primary:hover {
+            background: #2a4055;
+            border-color: #5a7a9a;
+        }
+
+        .arch-diagram {
+            background: #080d13;
+            border: 1px solid #1e2936;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 12px 0 18px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.85rem;
+            line-height: 2;
+            color: #a9b9c9;
+        }
+
+        .arch-diagram .arrow {
+            color: #56687c;
+            margin: 0 6px;
+        }
+
+        .arch-diagram .highlight {
+            color: #d9bd72;
+        }
+
+        .arch-diagram .green {
+            color: #7ee2a8;
+        }
+
+        .arch-diagram .blue {
+            color: #8db9ff;
+        }
+
+        .arch-diagram .purple {
+            color: #c7a1f7;
+        }
+
+        pre {
+            background: #080d13;
+            border: 1px solid #1a2430;
+            border-radius: 10px;
+            padding: 16px 18px;
+            overflow-x: auto;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.78rem;
+            line-height: 1.8;
+            color: #c8d4e0;
+            margin: 10px 0 14px;
+        }
+
+        pre .comment {
+            color: #5a6a7a;
+        }
+        pre .keyword {
+            color: #d9bd72;
+        }
+        pre .function {
+            color: #8db9ff;
+        }
+        pre .string {
+            color: #7ee2a8;
+        }
+        pre .type {
+            color: #c7a1f7;
+        }
+
+        .demo-terminal {
+            background: #070a0f;
+            border: 1px solid #1e2936;
+            border-radius: 12px;
+            padding: 16px 18px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.8rem;
+            color: #a9b9c9;
+            margin: 10px 0 14px;
+            overflow-x: auto;
+        }
+
+        .demo-terminal .prompt {
+            color: #70a47d;
+        }
+
+        .demo-terminal .cmd {
+            color: #d9bd72;
+        }
+
+        .demo-terminal .output {
+            color: #b0c4de;
+            padding-left: 18px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 20px;
+            margin: 8px 0 12px;
+        }
+
+        .feature-grid .item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #b6c4d4;
+            font-size: 0.9rem;
+        }
+
+        .feature-grid .item i {
+            color: #7ee2a8;
+            font-size: 0.75rem;
+        }
+
+        .limitation-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .limitation-list li {
+            color: #b6c4d4;
+            font-size: 0.9rem;
+            padding: 3px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .limitation-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #8492a6;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 12px;
+            margin: 8px 0 4px;
+        }
+
+        .tech-stack .item {
+            background: #111923;
+            border: 1px solid #1f2a36;
+            padding: 4px 14px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            color: #b0c4de;
+        }
+
+        .video-placeholder {
+            background: #080d13;
+            border: 1px solid #1e2936;
+            border-radius: 12px;
+            padding: 12px;
+            margin: 10px 0 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .video-placeholder video {
+            display: block;
+            width: min(100%, 760px);
+            max-height: 430px;
+            border-radius: 8px;
+            background: #0a0a0a;
+        }
+
+        .video-placeholder i {
+            font-size: 2.5rem;
+            color: #4a5a6a;
+            margin-bottom: 8px;
+        }
+
+        .video-placeholder .note {
+            font-size: 0.8rem;
+            color: #5a6a7a;
+        }
+
+        .divider {
+            border: 0;
+            border-top: 1px solid #1a2430;
+            margin: 18px 0;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px 24px;
+            color: #8392a4;
+            font-size: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #8392a4;
+        }
+
+        .footer-links a:hover {
+            color: #b8d5ff;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 14px 10px;
+            }
+            .card {
+                padding: 18px 16px;
+            }
+            .card-header h1 {
+                font-size: 1.6rem;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            .arch-diagram {
+                font-size: 0.75rem;
+                padding: 14px 16px;
+            }
+            pre {
+                font-size: 0.7rem;
+                padding: 12px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Back link -->
+        <a href="../index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i> back to portfolio
+        </a>
+
+        <!-- Main content -->
+        <div class="card">
+
+            <div class="card-header">
+                <div>
+                    <h1>CHIP-8 Emulator</h1>
+                    <div class="sub">A CHIP-8 emulator written in C exploring CPU emulation, memory, display, input and audio.</div>
+                </div>
+                <div class="flex-wrap">
+                    <span class="chip used">C</span>
+                    <span class="chip used">SDL2</span>
+                    <span class="chip used">Linux</span>
+                    <span class="chip built">2025</span>
+                </div>
+            </div>
+
+            <!-- Action links -->
+            <div class="action-links">
+                <a href="https://github.com/Soala7/Chip8-Emulator" target="_blank" rel="noopener noreferrer" class="action-btn primary">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+                <a href="#demo" class="action-btn">
+                    <i class="fas fa-play"></i> Watch Demo
+                </a>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Overview -->
+            <h2>Overview</h2>
+            <p>
+                This is a CHIP-8 emulator written in C using SDL2 for graphics and audio. CHIP-8 is an interpreted programming language
+                developed in the 1970s for early microcomputers and homebrew gaming. This emulator implements the full CHIP-8 instruction
+                set, including CPU emulation, memory management, display rendering, input handling, and audio output.
+            </p>
+
+            <!-- Architecture -->
+            <h2>How the Emulator Works</h2>
+            <p>
+                The emulator follows a classic fetch-decode-execute cycle:
+            </p>
+
+            <div class="arch-diagram">
+                <span class="blue">fetch</span> — read opcode from RAM at PC<br>
+                <span class="arrow">↓</span><br>
+                <span class="blue">decode</span> — extract operation, X, Y, N, NN, NNN<br>
+                <span class="arrow">↓</span><br>
+                <span class="blue">execute</span> — perform the operation<br>
+                <span class="arrow">↓</span><br>
+                <span class="highlight">update</span> — timers, display, audio<br>
+                <span class="arrow">↓</span><br>
+                <span class="green">repeat</span> — at 700 Hz (standard CHIP-8 speed)
+            </div>
+
+            <!-- Features -->
+            <h2>Features</h2>
+            <div class="feature-grid">
+                <div class="item"><i class="fas fa-check-circle"></i> Full CHIP-8 instruction set (35+ opcodes)</div>
+                <div class="item"><i class="fas fa-check-circle"></i> 64x32 pixel monochrome display</div>
+                <div class="item"><i class="fas fa-check-circle"></i> 4KB RAM with font storage</div>
+                <div class="item"><i class="fas fa-check-circle"></i> 16 general-purpose registers (V0–VF)</div>
+                <div class="item"><i class="fas fa-check-circle"></i> 16-level stack for subroutine calls</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Delay and sound timers (60 Hz)</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Hex keypad input (0–F)</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Audio output via SDL2</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Resizable window with pixel scaling</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Pause/resume with SPACE</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Debug mode with instruction logging</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Accurate timing with performance counters</div>
+            </div>
+
+            <!-- Implementation -->
+            <h2>Implementation Details</h2>
+
+            <h3>1. Memory &amp; Font Loading</h3>
+            <p>
+                The emulator allocates 4KB of RAM (4096 bytes). The first 512 bytes (0x000–0x1FF) are reserved for the interpreter,
+                with the font data stored at 0x000. The font data contains 16 sprites (5 bytes each) for digits 0–9 and letters A–F.
+                Programs are loaded starting at address 0x200.
+            </p>
+
+            <pre><span class="comment">// Font data stored starting at 0x000 in RAM</span>
+<span class="keyword">const</span> <span class="type">uint8_t</span> font[] = {
+    <span class="number">0xF0</span>, <span class="number">0x90</span>, <span class="number">0x90</span>, <span class="number">0x90</span>, <span class="number">0xF0</span>, <span class="comment">// 0</span>
+    <span class="number">0x20</span>, <span class="number">0x60</span>, <span class="number">0x20</span>, <span class="number">0x20</span>, <span class="number">0x70</span>, <span class="comment">// 1</span>
+    <span class="comment">// ...</span>
+};
+<span class="function">memcpy</span>(&amp;chip8->ram[0], font, <span class="keyword">sizeof</span>(font));</pre>
+
+            <h3>2. Instruction Decoding</h3>
+            <p>
+                Each CHIP-8 instruction is 2 bytes (16 bits). The emulator fetches the opcode from RAM, then decodes it using
+                bitwise operations to extract the operation and operands.
+            </p>
+
+            <pre><span class="type">uint16_t</span> opcode = (chip8->ram[chip8->PC] << 8) | chip8->ram[chip8->PC + 1];
+chip8->PC += 2;
+
+chip8->inst.NNN = opcode & 0x0FFF;  <span class="comment">// 12-bit address</span>
+chip8->inst.NN  = opcode & 0x00FF;  <span class="comment">// 8-bit value</span>
+chip8->inst.N   = opcode & 0x000F;  <span class="comment">// 4-bit nibble</span>
+chip8->inst.X   = (opcode >> 8) & 0x0F;  <span class="comment">// First register</span>
+chip8->inst.Y   = (opcode >> 4) & 0x0F;  <span class="comment">// Second register</span></pre>
+
+            <h3>3. Display &amp; Rendering</h3>
+            <p>
+                The display is a 64x32 pixel monochrome grid. Pixels are stored in a boolean array and rendered using SDL2 rectangles.
+                The emulator scales the display to fit the window size while maintaining the aspect ratio.
+            </p>
+
+            <h3>4. Input Handling</h3>
+            <p>
+                The emulator maps PC keyboard keys to the CHIP-8 hex keypad (0–F). The key mapping follows the standard layout:
+            </p>
+            <div style="background: #080d13; border-radius: 8px; padding: 10px 14px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #a9b9c9; margin: 6px 0 12px;">
+                1 2 3 4  →  1 2 3 C<br>
+                Q W E R  →  4 5 6 D<br>
+                A S D F  →  7 8 9 E<br>
+                Z X C V  →  A 0 B F
+            </div>
+
+            <h3>5. Audio</h3>
+            <p>
+                The sound timer is updated at 60 Hz. When the sound timer is greater than 0, the emulator plays a 440 Hz square wave
+                using SDL2's audio callback. The audio output is paused when the timer reaches 0.
+            </p>
+
+            <h3>6. Timing</h3>
+            <p>
+                The emulator uses SDL's performance counters for accurate timing. Instructions are executed at approximately 700 Hz
+                (standard CHIP-8 speed), while timers are updated at 60 Hz. This creates authentic emulation behavior.
+            </p>
+
+            <!-- Demo -->
+            <h2 id="demo">Demo</h2>
+            <p>
+                Here's a demonstration of the emulator running a Tetris ROM:
+            </p>
+
+            <div class="video-placeholder">
+                <video controls autoplay loop muted playsinline>
+                    <source src="../assets/chip8-demo.mp4" type="video/mp4">
+                    <div class="video-fallback">
+                        <i class="fas fa-play-circle"></i>
+                        <div style="font-weight:500; color:#9aabba;">🎮 Tetris on CHIP-8 Emulator</div>
+                        <div class="note">Video demo showing the emulator running a Tetris ROM with proper timing and input handling.</div>
+                        <div style="margin-top:10px; font-size:0.75rem; color:#5a6a7a;">
+                            <i class="fas fa-keyboard"></i> Controls: 1-4, Q-R, A-F, Z-V for keypad input
+                        </div>
+                    </div>
+                </video>
+            </div>
+
+            <div class="demo-terminal">
+                <div><span class="prompt">$</span> <span class="cmd">./chip8 tetris.ch8</span></div>
+                <div class="output">CHIP-8 Emulator starting...</div>
+                <div class="output">ROM loaded: tetris.ch8 (512 bytes)</div>
+                <div class="output">Display: 64x32 pixels</div>
+                <div class="output">Press SPACE to pause/resume</div>
+                <div class="output">Press ESC to quit</div>
+                <div style="margin-top:6px; color:#7ee2a8;">[ Emulator running — playing Tetris ]</div>
+            </div>
+
+            <!-- What I Learned -->
+            <h2>What I Learned</h2>
+            <ul style="color:#b6c4d4; padding-left:20px; margin-bottom:10px;">
+                <li>How CPU emulation works — fetching, decoding, and executing instructions</li>
+                <li>How to implement memory-mapped systems and I/O</li>
+                <li>How to handle graphics rendering with SDL2</li>
+                <li>How to implement a hex keypad and map keyboard input</li>
+                <li>How to generate audio with SDL2's audio callback system</li>
+                <li>How to maintain accurate timing using performance counters</li>
+                <li>How to structure a large C project with multiple concerns</li>
+            </ul>
+
+            <!-- Challenges -->
+            <h2>Challenges</h2>
+            <ul style="color:#b6c4d4; padding-left:20px; margin-bottom:10px;">
+                <li>Understanding the bitwise operations needed to decode instructions</li>
+                <li>Implementing the display rendering with proper pixel scaling</li>
+                <li>Getting the audio callback to work correctly with SDL2</li>
+                <li>Maintaining accurate timing between instruction execution and timer updates</li>
+                <li>Debugging the shift instructions (8xy6 and 8xyE) which have different behaviors in CHIP-8 and Super-CHIP</li>
+            </ul>
+
+            <!-- Limitations -->
+            <h2>Limitations</h2>
+            <ul class="limitation-list">
+                <li>No Super-CHIP support (extended instructions)</li>
+                <li>No SCHIP (Super CHIP) mode with higher resolution</li>
+                <li>No support for the CHIP-8X extended instruction set</li>
+                <li>Simple audio — only generates a square wave</li>
+            </ul>
+
+            <!-- Tech Stack -->
+            <hr class="divider">
+            <div class="tech-stack">
+                <span class="item">C</span>
+                <span class="item">SDL2</span>
+                <span class="item">Linux</span>
+                <span class="item">GCC</span>
+                <span class="item">Makefile</span>
+                <span class="item">Bitwise Operations</span>
+                <span class="item">Emulation</span>
+            </div>
+
+            <p class="muted small" style="margin-top:12px;">
+                <i class="fas fa-code"></i> ~600 lines of C + SDL2 for graphics and audio.
+            </p>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-links">
+            <a href="../index.html"><i class="fas fa-home"></i> soala.dev</a>
+            <a href="https://github.com/Soala7" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a>
+            <a href="https://www.linkedin.com/in/soala-amachree" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i> LinkedIn</a>
+            <span class="muted">Static HTML · CSS · JavaScript</span>
+        </div>
+
+    </div>
+
+</body>
+</html>

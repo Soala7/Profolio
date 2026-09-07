@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Soala Amachree · Chess Game 2.0</title>
+
+    <meta name="description" content="Advanced Chess Game with python-chess, AI opponent, and modern Pygame interface." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #090c11;
+            color: #dce5f0;
+            font-family: "Inter", sans-serif;
+            line-height: 1.7;
+            padding: 24px 16px;
+        }
+
+        a {
+            color: #86b7f2;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #b8d5ff;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .mono {
+            font-family: "JetBrains Mono", monospace;
+        }
+
+        .muted {
+            color: #8492a6;
+        }
+
+        .small {
+            font-size: 0.82rem;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #151d27;
+            border: 1px solid #2a3747;
+            color: #b9c7d7;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.7rem;
+        }
+
+        .chip.used {
+            background: rgba(59, 130, 246, 0.12);
+            border-color: rgba(59, 130, 246, 0.4);
+            color: #8db9ff;
+        }
+
+        .chip.built {
+            background: rgba(34, 197, 94, 0.12);
+            border-color: rgba(34, 197, 94, 0.4);
+            color: #7ee2a8;
+        }
+
+        .chip.learning {
+            background: rgba(245, 158, 11, 0.12);
+            border-color: rgba(245, 158, 11, 0.4);
+            color: #f5c76b;
+        }
+
+        .card {
+            background: #0e141c;
+            border: 1px solid #202a37;
+            border-radius: 16px;
+            padding: 28px 30px;
+            transition: 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: #344356;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .card-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        .card-header .sub {
+            color: #93a7bd;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #8492a6;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+        }
+
+        .back-link:hover {
+            color: #b8d5ff;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            border-bottom: 1px solid #202a37;
+            padding-bottom: 8px;
+            margin-bottom: 14px;
+            margin-top: 6px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            margin-top: 18px;
+            margin-bottom: 8px;
+            color: #d0dcee;
+        }
+
+        p {
+            color: #b6c4d4;
+            margin-bottom: 10px;
+        }
+
+        .flex-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 10px;
+            align-items: center;
+        }
+
+        .action-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 8px 0 4px;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #151d27;
+            border: 1px solid #2a3747;
+            color: #b9c7d7;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            transition: 0.15s;
+        }
+
+        .action-btn:hover {
+            background: #1e2a38;
+            border-color: #4a6a8a;
+            color: white;
+        }
+
+        .action-btn.primary {
+            background: #1a2a3a;
+            border-color: #3a5a7a;
+            color: #b8d5ff;
+        }
+
+        .action-btn.primary:hover {
+            background: #2a4055;
+            border-color: #5a7a9a;
+        }
+
+        .arch-diagram {
+            background: #080d13;
+            border: 1px solid #1e2936;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 12px 0 18px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.85rem;
+            line-height: 2.2;
+            color: #a9b9c9;
+        }
+
+        .arch-diagram .arrow {
+            color: #56687c;
+            margin: 0 6px;
+        }
+
+        .arch-diagram .highlight {
+            color: #d9bd72;
+        }
+
+        .arch-diagram .green {
+            color: #7ee2a8;
+        }
+
+        .arch-diagram .blue {
+            color: #8db9ff;
+        }
+
+        .arch-diagram .purple {
+            color: #c7a1f7;
+        }
+
+        .arch-diagram .yellow {
+            color: #f5c76b;
+        }
+
+        pre {
+            background: #080d13;
+            border: 1px solid #1a2430;
+            border-radius: 10px;
+            padding: 16px 18px;
+            overflow-x: auto;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.78rem;
+            line-height: 1.8;
+            color: #c8d4e0;
+            margin: 10px 0 14px;
+        }
+
+        pre .comment {
+            color: #5a6a7a;
+        }
+        pre .keyword {
+            color: #d9bd72;
+        }
+        pre .function {
+            color: #8db9ff;
+        }
+        pre .string {
+            color: #7ee2a8;
+        }
+        pre .type {
+            color: #c7a1f7;
+        }
+
+        .demo-terminal {
+            background: #070a0f;
+            border: 1px solid #1e2936;
+            border-radius: 12px;
+            padding: 16px 18px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.8rem;
+            color: #a9b9c9;
+            margin: 10px 0 14px;
+            overflow-x: auto;
+        }
+
+        .demo-terminal .prompt {
+            color: #70a47d;
+        }
+
+        .demo-terminal .cmd {
+            color: #d9bd72;
+        }
+
+        .demo-terminal .output {
+            color: #b0c4de;
+            padding-left: 18px;
+        }
+
+        .demo-terminal .highlight {
+            color: #7ee2a8;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 20px;
+            margin: 8px 0 12px;
+        }
+
+        .feature-grid .item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #b6c4d4;
+            font-size: 0.9rem;
+        }
+
+        .feature-grid .item i {
+            color: #7ee2a8;
+            font-size: 0.75rem;
+        }
+
+        .file-tree {
+            background: #080d13;
+            border: 1px solid #1a2430;
+            border-radius: 10px;
+            padding: 16px 20px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.78rem;
+            line-height: 1.9;
+            color: #a9b9c9;
+            margin: 8px 0 14px;
+            overflow-x: auto;
+        }
+
+        .file-tree .dir {
+            color: #8db9ff;
+        }
+
+        .file-tree .file {
+            color: #b0c4de;
+        }
+
+        .file-tree .highlight {
+            color: #d9bd72;
+        }
+
+        .video-container {
+            background: #080d13;
+            border: 1px solid #1e2936;
+            border-radius: 12px;
+            padding: 0;
+            margin: 10px 0 14px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .video-container video {
+            width: 100%;
+            display: block;
+            background: #0a0a0a;
+        }
+
+        .video-container .video-fallback {
+            padding: 60px 20px;
+            text-align: center;
+            color: #687789;
+            background: #0a0a0a;
+        }
+
+        .video-container .video-fallback i {
+            font-size: 3rem;
+            color: #4a5a6a;
+            margin-bottom: 10px;
+        }
+
+        .video-container .video-fallback .note {
+            font-size: 0.8rem;
+            color: #5a6a7a;
+        }
+
+        .screenshot-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin: 10px 0 14px;
+        }
+
+        .screenshot-grid .screenshot {
+            background: #080d13;
+            border: 1px solid #1e2936;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .screenshot-grid .screenshot .placeholder {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0a1017;
+            border-radius: 6px;
+            color: #4a5a6a;
+            font-size: 0.75rem;
+        }
+
+        .screenshot-grid .screenshot .caption {
+            margin-top: 6px;
+            font-size: 0.75rem;
+            color: #8492a6;
+        }
+
+        .divider {
+            border: 0;
+            border-top: 1px solid #1a2430;
+            margin: 18px 0;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px 24px;
+            color: #8392a4;
+            font-size: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #8392a4;
+        }
+
+        .footer-links a:hover {
+            color: #b8d5ff;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 14px 10px;
+            }
+            .card {
+                padding: 18px 16px;
+            }
+            .card-header h1 {
+                font-size: 1.6rem;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            .screenshot-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .arch-diagram {
+                font-size: 0.75rem;
+                padding: 14px 16px;
+            }
+            pre {
+                font-size: 0.7rem;
+                padding: 12px 14px;
+            }
+            .file-tree {
+                font-size: 0.7rem;
+                padding: 12px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Back link -->
+        <a href="../index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i> back to portfolio
+        </a>
+
+        <!-- Main content -->
+        <div class="card">
+
+            <div class="card-header">
+                <div>
+                    <h1>Chess Game 2.0</h1>
+                    <div class="sub">Advanced Chess Game with python-chess, AI opponent, and modern Pygame interface.</div>
+                </div>
+                <div class="flex-wrap">
+                    <span class="chip used">Python</span>
+                    <span class="chip used">Pygame</span>
+                    <span class="chip used">python-chess</span>
+                    <span class="chip built">2025</span>
+                </div>
+            </div>
+
+            <!-- Action links -->
+            <div class="action-links">
+                <a href="https://github.com/Soala7/Chess-game-2.0" target="_blank" rel="noopener noreferrer" class="action-btn primary">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+                <a href="#demo" class="action-btn">
+                    <i class="fas fa-play"></i> Watch Demo
+                </a>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Overview -->
+            <h2>Overview</h2>
+            <p>
+                Chess Game 2.0 is a complete chess application built with Python and Pygame. It features a modern graphical interface, AI opponent with adjustable difficulty, sound effects, and full chess rule enforcement using the python-chess library. The game supports both human vs AI and human vs human modes.
+            </p>
+
+            <!-- Demo Video -->
+            <h2 id="demo">Gameplay Demo</h2>
+            <p>
+                Watch the AI opponent in action:
+            </p>
+
+            <div class="video-container">
+                <video controls autoplay loop muted playsinline>
+                    <source src="../assets/chess-demo.mp4" type="video/mp4">
+                    <div class="video-fallback">
+                        <i class="fas fa-play-circle"></i>
+                        <div style="font-weight:500; color:#9aabba;">♟️ Chess Game 2.0 Demo</div>
+                        <div class="note">Your browser doesn't support the video tag.</div>
+                        <div class="note" style="margin-top:6px;">Demo showing the launcher, AI gameplay, and interface.</div>
+                    </div>
+                </video>
+            </div>
+
+            <!-- Screenshots -->
+            <h2>Interface</h2>
+            <div class="screenshot-grid">
+                <div class="screenshot">
+                    <div class="placeholder">
+                        <i class="fas fa-chess" style="font-size:2rem;"></i>
+                    </div>
+                    <div class="caption">Launcher</div>
+                </div>
+                <div class="screenshot">
+                    <div class="placeholder">
+                        <i class="fas fa-chess-board" style="font-size:2rem;"></i>
+                    </div>
+                    <div class="caption">Game Board</div>
+                </div>
+                <div class="screenshot">
+                    <div class="placeholder">
+                        <i class="fas fa-robot" style="font-size:2rem;"></i>
+                    </div>
+                    <div class="caption">AI in Action</div>
+                </div>
+            </div>
+
+            <!-- Architecture -->
+            <h2>Architecture</h2>
+
+            <div class="arch-diagram">
+                <span style="color:#7ee2a8;">Chess Launcher</span><br>
+                <span class="arrow">├──</span> <span style="color:#8db9ff;">Play vs AI</span><br>
+                <span class="arrow">└──</span> <span style="color:#8db9ff;">Play vs Human</span><br>
+                <span class="arrow">│</span><br>
+                <span style="color:#d9bd72;">Game Engine</span><br>
+                <span class="arrow">├──</span> <span style="color:#f5c76b;">python-chess</span> — board state, move generation, validation<br>
+                <span class="arrow">├──</span> <span style="color:#f5c76b;">AI Bot</span> — negamax with alpha-beta pruning<br>
+                <span class="arrow">├──</span> <span style="color:#f5c76b;">Piece Renderer</span> — images &amp; Unicode fallback<br>
+                <span class="arrow">├──</span> <span style="color:#f5c76b;">Sound Engine</span> — move, capture, check sounds<br>
+                <span class="arrow">└──</span> <span style="color:#f5c76b;">UI Manager</span> — board, info panel, dialogs<br>
+                <span class="arrow">│</span><br>
+                <span style="color:#c7a1f7;">Pygame</span> — graphics, input, audio
+            </div>
+
+            <!-- Features -->
+            <h2>Features</h2>
+            <div class="feature-grid">
+                <div class="item"><i class="fas fa-check-circle"></i> Full chess rules with python-chess</div>
+                <div class="item"><i class="fas fa-check-circle"></i> AI opponent with adjustable difficulty (1-5)</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Negamax with alpha-beta pruning</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Quiescence search for tactical stability</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Piece-square tables for positional evaluation</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Move ordering for search efficiency</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Transposition table caching</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Sound effects for moves, captures, checks</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Board flip support</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Promotion dialog</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Move history display</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Captured pieces tracking</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Material balance display</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Game state detection (check, checkmate, draw)</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Unicode piece fallback</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Modern launcher with mode selection</div>
+            </div>
+
+            <!-- Implementation -->
+            <h2>Implementation Details</h2>
+
+            <h3>1. Chess Engine (python-chess)</h3>
+            <p>
+                The game uses the python-chess library for all chess logic. This includes move generation, validation, board state management, and game over detection. This allows the project to focus on the UI and AI implementation.
+            </p>
+
+            <h3>2. AI Opponent</h3>
+            <p>
+                The AI uses negamax search with alpha-beta pruning. It evaluates positions using material balance, piece-square tables, and mobility. The search depth can be adjusted from 2 (Easy) to 6 (Expert) plies.
+            </p>
+            <div class="demo-terminal">
+                <div><span class="prompt">$</span> <span class="cmd">python ai_bot.py</span></div>
+                <div class="output">AI Engine initialized with depth 4</div>
+                <div class="output">Evaluation: material + positional + mobility</div>
+                <div class="output">Search: negamax with alpha-beta pruning</div>
+                <div class="output">Move ordering: captures &gt; promotions &gt; checks</div>
+                <div class="output">Quiescence search enabled for tactical stability</div>
+            </div>
+
+            <h3>3. Piece Rendering</h3>
+            <p>
+                The game supports both image-based and Unicode piece rendering. Images are loaded from the assets folder, with Unicode symbols as a fallback. This ensures the game works even without custom images.
+            </p>
+
+            <h3>4. Sound Engine</h3>
+            <p>
+                The sound engine plays contextual sounds for moves, captures, checks, promotions, and game events. Sounds are loaded from the assets folder with fallback to silence if files are missing.
+            </p>
+
+            <h3>5. Launcher</h3>
+            <p>
+                The launcher provides a clean interface for selecting the game mode (vs AI or vs Human) and AI difficulty. It uses a gradient background with a translucent panel for a modern feel.
+            </p>
+
+            <!-- Project Structure -->
+            <h2>Project Structure</h2>
+            <div class="file-tree">
+                <span class="dir">Chess_game_2.0/</span><br>
+                ├── <span class="dir">assets/</span> — piece images, sound files<br>
+                ├── <span class="dir">my_chess_game/</span><br>
+                │   ├── <span class="dir">ai/</span><br>
+                │   │   └── <span class="file highlight">ai_bot.py</span> — AI opponent<br>
+                │   ├── <span class="dir">gui/</span><br>
+                │   │   ├── <span class="file">protype.py</span><br>
+                │   │   └── <span class="file highlight">pygame_gui.py</span> — main game UI<br>
+                │   └── <span class="file highlight">main.py</span> — launcher<br>
+                ├── <span class="file">LICENSE</span><br>
+                └── <span class="file">README.md</span>
+            </div>
+
+            <!-- Controls -->
+            <h2>Controls</h2>
+            <div class="demo-terminal">
+                <div><span class="prompt">Launcher:</span></div>
+                <div class="output">Click "Play vs AI" or "Play vs Human"</div>
+                <div class="output">Select AI difficulty (1-5) when prompted</div>
+                <div style="margin-top:6px;"><span class="prompt">Game:</span></div>
+                <div class="output">Click piece → Select, Click square → Move</div>
+                <div class="output">R: Reset game</div>
+                <div class="output">H: Show game analysis</div>
+                <div class="output">F: Flip board</div>
+                <div class="output">S: Toggle sound</div>
+                <div class="output">ESC: Quit</div>
+            </div>
+
+            <!-- What I Learned -->
+            <h2>What I Learned</h2>
+            <ul style="color:#b6c4d4; padding-left:20px; margin-bottom:10px;">
+                <li>How to implement AI search algorithms (negamax, alpha-beta pruning)</li>
+                <li>How to evaluate chess positions with material and positional factors</li>
+                <li>How to integrate a chess library (python-chess) with a GUI</li>
+                <li>How to design a modular game architecture with separate concerns</li>
+                <li>How to handle user input and event-driven programming with Pygame</li>
+                <li>How to implement sound effects and visual feedback</li>
+            </ul>
+
+            <!-- Challenges -->
+            <h2>Challenges</h2>
+            <ul style="color:#b6c4d4; padding-left:20px; margin-bottom:10px;">
+                <li>Implementing the AI search with good performance</li>
+                <li>Handling promotion correctly with a dialog</li>
+                <li>Managing state between the launcher and game</li>
+                <li>Making the UI responsive and polished</li>
+                <li>Integrating sound effects without breaking the game</li>
+            </ul>
+
+            <!-- Tech Stack -->
+            <hr class="divider">
+            <div class="tech-stack">
+                <span class="item">Python</span>
+                <span class="item">Pygame</span>
+                <span class="item">python-chess</span>
+                <span class="item">Negamax</span>
+                <span class="item">Alpha-Beta Pruning</span>
+                <span class="item">Quiescence Search</span>
+                <span class="item">Piece-Square Tables</span>
+                <span class="item">Transposition Table</span>
+            </div>
+
+            <p class="muted small" style="margin-top:12px;">
+                <i class="fas fa-code"></i> ~1000 lines of Python with Pygame and python-chess.
+            </p>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-links">
+            <a href="../index.html"><i class="fas fa-home"></i> soala.dev</a>
+            <a href="https://github.com/Soala7" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a>
+            <a href="https://www.linkedin.com/in/soala-amachree" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i> LinkedIn</a>
+            <span class="muted">Static HTML · CSS · JavaScript</span>
+        </div>
+
+    </div>
+
+</body>
+</html>

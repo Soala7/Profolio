@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Soala Amachree · Gorgon VOS Simulator</title>
+
+    <meta name="description" content="Virtual Operating System (VOS) Simulator — Phase 1 built with Python and Pygame, featuring a virtual desktop, filesystem, terminal, and applications." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #090c11;
+            color: #dce5f0;
+            font-family: "Inter", sans-serif;
+            line-height: 1.7;
+            padding: 24px 16px;
+        }
+
+        a {
+            color: #86b7f2;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #b8d5ff;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .mono {
+            font-family: "JetBrains Mono", monospace;
+        }
+
+        .muted {
+            color: #8492a6;
+        }
+
+        .small {
+            font-size: 0.82rem;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #151d27;
+            border: 1px solid #2a3747;
+            color: #b9c7d7;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.7rem;
+        }
+
+        .chip.used {
+            background: rgba(59, 130, 246, 0.12);
+            border-color: rgba(59, 130, 246, 0.4);
+            color: #8db9ff;
+        }
+
+        .chip.built {
+            background: rgba(34, 197, 94, 0.12);
+            border-color: rgba(34, 197, 94, 0.4);
+            color: #7ee2a8;
+        }
+
+        .chip.learning {
+            background: rgba(245, 158, 11, 0.12);
+            border-color: rgba(245, 158, 11, 0.4);
+            color: #f5c76b;
+        }
+
+        .card {
+            background: #0e141c;
+            border: 1px solid #202a37;
+            border-radius: 16px;
+            padding: 28px 30px;
+            transition: 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: #344356;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .card-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        .card-header .sub {
+            color: #93a7bd;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #8492a6;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+        }
+
+        .back-link:hover {
+            color: #b8d5ff;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            border-bottom: 1px solid #202a37;
+            padding-bottom: 8px;
+            margin-bottom: 14px;
+            margin-top: 6px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            margin-top: 18px;
+            margin-bottom: 8px;
+            color: #d0dcee;
+        }
+
+        p {
+            color: #b6c4d4;
+            margin-bottom: 10px;
+        }
+
+        .flex-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 10px;
+            align-items: center;
+        }
+
+        .action-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 8px 0 4px;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #151d27;
+            border: 1px solid #2a3747;
+            color: #b9c7d7;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            transition: 0.15s;
+        }
+
+        .action-btn:hover {
+            background: #1e2a38;
+            border-color: #4a6a8a;
+            color: white;
+        }
+
+        .action-btn.primary {
+            background: #1a2a3a;
+            border-color: #3a5a7a;
+            color: #b8d5ff;
+        }
+
+        .action-btn.primary:hover {
+            background: #2a4055;
+            border-color: #5a7a9a;
+        }
+
+        .arch-diagram {
+            background: #080d13;
+            border: 1px solid #1e2936;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 12px 0 18px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.85rem;
+            line-height: 2.2;
+            color: #a9b9c9;
+        }
+
+        .arch-diagram .arrow {
+            color: #56687c;
+            margin: 0 6px;
+        }
+
+        .arch-diagram .highlight {
+            color: #d9bd72;
+        }
+
+        .arch-diagram .green {
+            color: #7ee2a8;
+        }
+
+        .arch-diagram .blue {
+            color: #8db9ff;
+        }
+
+        .arch-diagram .purple {
+            color: #c7a1f7;
+        }
+
+        .arch-diagram .yellow {
+            color: #f5c76b;
+        }
+
+        pre {
+            background: #080d13;
+            border: 1px solid #1a2430;
+            border-radius: 10px;
+            padding: 16px 18px;
+            overflow-x: auto;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.78rem;
+            line-height: 1.8;
+            color: #c8d4e0;
+            margin: 10px 0 14px;
+        }
+
+        pre .comment {
+            color: #5a6a7a;
+        }
+        pre .keyword {
+            color: #d9bd72;
+        }
+        pre .function {
+            color: #8db9ff;
+        }
+        pre .string {
+            color: #7ee2a8;
+        }
+        pre .type {
+            color: #c7a1f7;
+        }
+
+        .demo-terminal {
+            background: #070a0f;
+            border: 1px solid #1e2936;
+            border-radius: 12px;
+            padding: 16px 18px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.8rem;
+            color: #a9b9c9;
+            margin: 10px 0 14px;
+            overflow-x: auto;
+        }
+
+        .demo-terminal .prompt {
+            color: #70a47d;
+        }
+
+        .demo-terminal .cmd {
+            color: #d9bd72;
+        }
+
+        .demo-terminal .output {
+            color: #b0c4de;
+            padding-left: 18px;
+        }
+
+        .demo-terminal .highlight {
+            color: #7ee2a8;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 20px;
+            margin: 8px 0 12px;
+        }
+
+        .feature-grid .item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #b6c4d4;
+            font-size: 0.9rem;
+        }
+
+        .feature-grid .item i {
+            color: #7ee2a8;
+            font-size: 0.75rem;
+        }
+
+        .file-tree {
+            background: #080d13;
+            border: 1px solid #1a2430;
+            border-radius: 10px;
+            padding: 16px 20px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.78rem;
+            line-height: 1.9;
+            color: #a9b9c9;
+            margin: 8px 0 14px;
+            overflow-x: auto;
+        }
+
+        .file-tree .dir {
+            color: #8db9ff;
+        }
+
+        .file-tree .file {
+            color: #b0c4de;
+        }
+
+        .file-tree .highlight {
+            color: #d9bd72;
+        }
+
+        .video-container {
+            background: #080d13;
+            border: 1px solid #1e2936;
+            border-radius: 12px;
+            padding: 0;
+            margin: 10px 0 14px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .video-container video {
+            width: 100%;
+            display: block;
+            background: #0a0a0a;
+        }
+
+        .video-container .video-fallback {
+            padding: 60px 20px;
+            text-align: center;
+            color: #687789;
+            background: #0a0a0a;
+        }
+
+        .video-container .video-fallback i {
+            font-size: 3rem;
+            color: #4a5a6a;
+            margin-bottom: 10px;
+        }
+
+        .video-container .video-fallback .note {
+            font-size: 0.8rem;
+            color: #5a6a7a;
+        }
+
+        .screenshot-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 10px 0 14px;
+        }
+
+        .screenshot-grid .screenshot {
+            background: #080d13;
+            border: 1px solid #1e2936;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .screenshot-grid .screenshot img {
+            display: block;
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            object-position: center top;
+            border-radius: 8px;
+            border: 1px solid #1e2936;
+            background: #0a1017;
+        }
+
+        .screenshot-grid .screenshot .placeholder {
+            display: none;
+        }
+
+        .screenshot-grid .screenshot .caption {
+            margin-top: 0;
+            font-size: 0.75rem;
+            color: #8492a6;
+        }
+
+        .roadmap {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin: 10px 0 14px;
+        }
+
+        .roadmap .phase {
+            background: #080d13;
+            border: 1px solid #1e2936;
+            border-radius: 10px;
+            padding: 14px 16px;
+            text-align: center;
+        }
+
+        .roadmap .phase .status {
+            margin-top: 4px;
+            font-size: 0.75rem;
+            padding: 2px 10px;
+            border-radius: 999px;
+            display: inline-block;
+        }
+
+        .roadmap .phase .status.complete {
+            background: rgba(34, 197, 94, 0.15);
+            color: #7ee2a8;
+        }
+
+        .roadmap .phase .status.planned {
+            background: rgba(245, 158, 11, 0.15);
+            color: #f5c76b;
+        }
+
+        .roadmap .phase .status.future {
+            background: rgba(168, 85, 247, 0.15);
+            color: #c7a1f7;
+        }
+
+        .divider {
+            border: 0;
+            border-top: 1px solid #1a2430;
+            margin: 18px 0;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px 24px;
+            color: #8392a4;
+            font-size: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #8392a4;
+        }
+
+        .footer-links a:hover {
+            color: #b8d5ff;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 14px 10px;
+            }
+            .card {
+                padding: 18px 16px;
+            }
+            .card-header h1 {
+                font-size: 1.6rem;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            .screenshot-grid {
+                grid-template-columns: 1fr;
+            }
+            .roadmap {
+                grid-template-columns: 1fr;
+            }
+            .arch-diagram {
+                font-size: 0.75rem;
+                padding: 14px 16px;
+            }
+            pre {
+                font-size: 0.7rem;
+                padding: 12px 14px;
+            }
+            .file-tree {
+                font-size: 0.7rem;
+                padding: 12px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Back link -->
+        <a href="../index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i> back to portfolio
+        </a>
+
+        <!-- Main content -->
+        <div class="card">
+
+            <div class="card-header">
+                <div>
+                    <h1>Gorgon Virtual OS Simulator</h1>
+                    <div class="sub">A virtual operating system simulator built from scratch with Python and Pygame.</div>
+                </div>
+                <div class="flex-wrap">
+                    <span class="chip used">Python</span>
+                    <span class="chip used">Pygame</span>
+                    <span class="chip used">C</span>
+                    <span class="chip built">2025</span>
+                </div>
+            </div>
+
+            <!-- Action links -->
+            <div class="action-links">
+                <a href="https://github.com/Soala7/Gorgon-OS-Virtual-Simulator" target="_blank" rel="noopener noreferrer" class="action-btn primary">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+                <a href="#demo" class="action-btn">
+                    <i class="fas fa-play"></i> Watch Demo
+                </a>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Overview -->
+            <h2>Overview</h2>
+            <p>
+                VOS (Virtual Operating System) is a project where I am building an operating system from the ground up while learning how operating systems, filesystems, applications, system architecture, and lower-level programming work. Rather than jumping directly into building a real operating system, I divided the project into three stages:
+            </p>
+
+            <div class="roadmap">
+                <div class="phase">
+                    <strong>Phase 1</strong>
+                    <div style="font-size:0.8rem; color:#8492a6;">Simulator</div>
+                    <div class="status complete">✅ Complete</div>
+                </div>
+                <div class="phase">
+                    <strong>Phase 2</strong>
+                    <div style="font-size:0.8rem; color:#8492a6;">Real OS</div>
+                    <div class="status planned">⏳ Planned</div>
+                </div>
+                <div class="phase">
+                    <strong>Phase 3</strong>
+                    <div style="font-size:0.8rem; color:#8492a6;">Linux distro</div>
+                    <div class="status future">🔮 Future</div>
+                </div>
+            </div>
+
+            <!-- Demo Video -->
+            <h2 id="demo">Demo</h2>
+            <p>
+                Navigating through the VOS desktop environment:
+            </p>
+
+            <div class="video-container">
+                <video controls autoplay loop muted playsinline>
+                    <source src="../assets/vos-demo.mp4" type="video/mp4">
+                    <div class="video-fallback">
+                        <i class="fas fa-play-circle"></i>
+                        <div style="font-weight:500; color:#9aabba;">🖥️ VOS Desktop Walkthrough</div>
+                        <div class="note">Your browser doesn't support the video tag.</div>
+                        <div class="note" style="margin-top:6px;">Demo showing the desktop, launcher, terminal, file explorer, and text editor.</div>
+                    </div>
+                </video>
+            </div>
+
+            <!-- Screenshots -->
+            <h2>Applications</h2>
+
+            <div class="screenshot-grid">
+                <div class="screenshot">
+                    <img src="../assets/launcher.png" alt="VOS Launcher" loading="lazy">
+                    <div class="caption">Launcher</div>
+                </div>
+                <div class="screenshot">
+                    <img src="../assets/explorer.png" alt="VOS File Explorer" loading="lazy">
+                    <div class="caption">File Explorer</div>
+                </div>
+                <div class="screenshot">
+                    <img src="../assets/terminal.png" alt="VOS Terminal" loading="lazy">
+                    <div class="caption">Terminal</div>
+                </div>
+                <div class="screenshot">
+                    <img src="../assets/editor.png" alt="VOS Text Editor" loading="lazy">
+                    <div class="caption">Text Editor</div>
+                </div>
+            </div>
+
+            <!-- Architecture -->
+            <h2>Architecture</h2>
+
+            <div class="arch-diagram">
+                <span style="color:#7ee2a8;">VOS Desktop</span><br>
+                <span class="arrow">│</span><br>
+                <span style="color:#8db9ff;">Application Manager</span><br>
+                <span class="arrow">├──</span> <span style="color:#d9bd72;">Explorer</span><br>
+                <span class="arrow">├──</span> <span style="color:#d9bd72;">Editor</span><br>
+                <span class="arrow">├──</span> <span style="color:#d9bd72;">Terminal</span><br>
+                <span class="arrow">├──</span> <span style="color:#d9bd72;">Browser</span><br>
+                <span class="arrow">├──</span> <span style="color:#d9bd72;">Music Player</span><br>
+                <span class="arrow">└──</span> <span style="color:#d9bd72;">Game</span><br>
+                <span class="arrow">│</span><br>
+                <span style="color:#f5c76b;">VOS System Layer</span><br>
+                <span class="arrow">│</span><br>
+                <span style="color:#c7a1f7;">Virtual Filesystem</span><br>
+                <span class="arrow">│</span><br>
+                <span style="color:#8db9ff;">Virtual Storage</span><br>
+                <span class="arrow">│</span><br>
+                <span style="color:#8492a6;">Host Computer</span>
+            </div>
+
+            <p>
+                The important idea is that the applications are built around VOS's own system components, not the host system. This allows the simulator to behave more like an operating system instead of a collection of independent applications.
+            </p>
+
+            <!-- Features -->
+            <h2>Features</h2>
+            <div class="feature-grid">
+                <div class="item"><i class="fas fa-check-circle"></i> Virtual desktop environment</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Window management system</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Virtual filesystem</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Persistent virtual storage</div>
+                <div class="item"><i class="fas fa-check-circle"></i> File Explorer</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Text Editor</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Terminal / Shell</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Application launcher</div>
+                <div class="item"><i class="fas fa-check-circle"></i> File creation and saving</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Virtual directories</div>
+                <div class="item"><i class="fas fa-check-circle"></i> File operations (copy, move, delete)</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Basic browser</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Music player</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Game application</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Wallpaper settings</div>
+            </div>
+
+            <!-- Applications -->
+            <h2>Applications</h2>
+
+            <h3>Terminal</h3>
+            <p>
+                The Terminal provides a command-line interface for interacting with VOS. It contains a shell implemented in C while the graphical terminal application communicates with it through the VOS architecture.
+            </p>
+            <div class="demo-terminal">
+                <div><span class="prompt">$</span> <span class="cmd">help</span></div>
+                <div class="output">Available commands: about, cat, cd, clear, cp, date, echo, exit, help, ls, mkdir, mv, pwd, rm, rmdir, time, touch, tree, version, write</div>
+                <div><span class="prompt">$</span> <span class="cmd">ls</span></div>
+                <div class="output">Documents/  Downloads/  Music/  Pictures/</div>
+                <div><span class="prompt">$</span> <span class="cmd">mkdir test</span></div>
+                <div><span class="prompt">$</span> <span class="cmd">touch test/hello.txt</span></div>
+                <div><span class="prompt">$</span> <span class="cmd">echo "Hello VOS" &gt; test/hello.txt</span></div>
+                <div><span class="prompt">$</span> <span class="cmd">cat test/hello.txt</span></div>
+                <div class="output">Hello VOS</div>
+            </div>
+
+            <h3>File Explorer</h3>
+            <p>
+                The File Explorer interacts with the VOS virtual filesystem and allows files and directories to be created, opened, and managed. It provides the graphical interface for navigating the simulated filesystem.
+            </p>
+
+            <h3>Text Editor</h3>
+            <p>
+                The Text Editor is connected to the virtual filesystem. It allows users to create, open, edit, and save text files stored inside VOS. This was one of the main applications used to demonstrate communication between an application and the VOS filesystem.
+            </p>
+
+            <!-- Project Structure -->
+            <h2>Project Structure</h2>
+            <div class="file-tree">
+                <span class="dir">VOS/</span><br>
+                ├── <span class="dir">api/</span><br>
+                ├── <span class="dir">apps/</span><br>
+                │   ├── <span class="dir">browser/</span><br>
+                │   ├── <span class="dir">editor/</span><br>
+                │   ├── <span class="dir">explorer/</span><br>
+                │   ├── <span class="dir">game/</span><br>
+                │   ├── <span class="dir">music/</span><br>
+                │   └── <span class="dir">terminal/</span><br>
+                ├── <span class="dir">assets/</span><br>
+                │   ├── <span class="file">logo.svg</span><br>
+                │   └── <span class="dir">music/</span><br>
+                ├── <span class="dir">boot/</span><br>
+                ├── <span class="dir">core/</span><br>
+                ├── <span class="dir">data/</span><br>
+                ├── <span class="dir">desktop/</span><br>
+                ├── <span class="dir">filesystem/</span><br>
+                ├── <span class="dir">kernel/</span><br>
+                ├── <span class="dir">network/</span><br>
+                ├── <span class="dir">process/</span><br>
+                ├── <span class="dir">security/</span><br>
+                ├── <span class="dir">users/</span><br>
+                ├── <span class="file highlight">main.py</span><br>
+                ├── <span class="file">vos_disk.img</span><br>
+                └── <span class="file">README.md</span>
+            </div>
+
+            <!-- What I Learned -->
+            <h2>What I Learned</h2>
+            <ul style="color:#b6c4d4; padding-left:20px; margin-bottom:10px;">
+                <li>How the major components of an operating system fit together</li>
+                <li>How to design and implement a virtual filesystem</li>
+                <li>How window management and application lifecycles work</li>
+                <li>How to build a shell and command-line interface</li>
+                <li>How applications communicate with system components</li>
+                <li>How to structure a large project with multiple components</li>
+                <li>How to design for future expansion (Phase 2 → Phase 3)</li>
+            </ul>
+
+            <!-- Challenges -->
+            <h2>Challenges</h2>
+            <ul style="color:#b6c4d4; padding-left:20px; margin-bottom:10px;">
+                <li>Designing a filesystem that feels like a real OS</li>
+                <li>Building a shell that can execute both built-ins and communicate with the system</li>
+                <li>Creating a window manager that handles multiple applications</li>
+                <li>Making the system feel like a cohesive OS rather than separate apps</li>
+                <li>Managing state between applications and the filesystem</li>
+            </ul>
+
+            <!-- Development Philosophy -->
+            <h2>Development Philosophy</h2>
+            <p>
+                VOS is not being built by immediately trying to reproduce an entire operating system. Instead, I am building it in layers:
+            </p>
+
+            <div class="arch-diagram">
+                Understand<br>
+                <span class="arrow">↓</span><br>
+                Simulate<br>
+                <span class="arrow">↓</span><br>
+                Connect<br>
+                <span class="arrow">↓</span><br>
+                Test<br>
+                <span class="arrow">↓</span><br>
+                Improve<br>
+                <span class="arrow">↓</span><br>
+                Replace<br>
+                <span class="arrow">↓</span><br>
+                <span style="color:#7ee2a8;">Build for real hardware</span>
+            </div>
+
+            <!-- Status -->
+            <h2>Current Status</h2>
+            <p>
+                <span class="chip built"><i class="fas fa-check"></i> Phase 1 — Simulator: COMPLETE</span>
+            </p>
+            <p>
+                The simulator currently provides a functional virtual desktop, application environment, virtual filesystem, storage system, terminal, window manager, and multiple system applications. The project is still under active development, but the first major milestone has been reached.
+            </p>
+
+            <!-- Tech Stack -->
+            <hr class="divider">
+            <div class="tech-stack">
+                <span class="item">Python</span>
+                <span class="item">Pygame</span>
+                <span class="item">C</span>
+                <span class="item">Virtual Filesystem</span>
+                <span class="item">Window Manager</span>
+                <span class="item">Shell</span>
+                <span class="item">Application Architecture</span>
+            </div>
+
+            <p class="muted small" style="margin-top:12px;">
+                <i class="fas fa-code"></i> Phase 1: ~5000+ lines of Python + C shell integration.
+            </p>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-links">
+            <a href="../index.html"><i class="fas fa-home"></i> soala.dev</a>
+            <a href="https://github.com/Soala7" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a>
+            <a href="https://www.linkedin.com/in/soala-amachree" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i> LinkedIn</a>
+            <span class="muted">Static HTML · CSS · JavaScript</span>
+        </div>
+
+    </div>
+
+</body>
+</html>

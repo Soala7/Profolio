@@ -1113,7 +1113,6 @@
       onclick="closeModal()"
       aria-label="Close image"
     >
-      ×
     </button>
 
     <h3 id="modalTitle"></h3>
@@ -1130,6 +1129,29 @@
 /* =========================================================
    TECHNOLOGIES (with honest statuses)
 ========================================================= */
+
+const siteBasePath = (() => {
+  const path = window.location.pathname;
+  const repoPrefix = "/Profolio/";
+
+  if (path.includes(repoPrefix)) {
+    return repoPrefix;
+  }
+
+  return "/";
+})();
+
+const resolveProjectPath = (path) => {
+  if (!path || path.startsWith("http") || path.startsWith("mailto:")) {
+    return path;
+  }
+
+  if (path.startsWith("/")) {
+    return path;
+  }
+
+  return `${siteBasePath}${path.replace(/^\.\//, "")}`;
+};
 
 const technologies = [
   {
@@ -1306,7 +1328,7 @@ const projects = [
     description:
       "A custom Unix shell written in C — explores process management, command parsing and shell internals.",
     tags: ["systems", "software"],
-    date: "2025",
+    date: "2026",
     repo: "https://github.com/Soala7/c-unix-shell",
     article: "projects/unix-shell.html"
   },
@@ -1438,12 +1460,14 @@ function renderProjects(filter = "all") {
       </a>
     `;
 
+    const articleUrl = project.article ? resolveProjectPath(project.article) : "";
+
     card.innerHTML = `
 
       <div class="project-title">
 
         <strong>
-          ${project.article ? `<a href="${project.article}" style="color:#dce5f0;">${project.title}</a>` : project.title}
+          ${project.article ? `<a href="${articleUrl}" style="color:#dce5f0;">${project.title}</a>` : project.title}
         </strong>
 
         <span class="muted small">

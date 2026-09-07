@@ -292,6 +292,31 @@
       font-size: 0.87rem;
     }
 
+    .project-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .project-actions .action-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.75rem;
+      color: #86b7f2;
+      padding: 4px 12px;
+      border: 1px solid #2a3747;
+      border-radius: 999px;
+      transition: 0.15s;
+    }
+
+    .project-actions .action-link:hover {
+      background: #1a2636;
+      border-color: #4a6a8a;
+      color: #b8d5ff;
+    }
+
     /* TECHNOLOGY */
 
     .tech-card {
@@ -1231,7 +1256,7 @@ const technologies = [
 
 
 /* =========================================================
-   PROJECTS (with real GitHub repo links)
+   PROJECTS (with real GitHub repo links and article links)
 ========================================================= */
 
 const projects = [
@@ -1242,7 +1267,8 @@ const projects = [
       "Phase 1 of a virtual operating system simulator built with Pygame — explores how a VM works, with a terminal and desktop environment.",
     tags: ["systems", "software"],
     date: "2025",
-    repo: "https://github.com/Soala7/Gorgon-OS-Virtual-Simulator"
+    repo: "https://github.com/Soala7/Gorgon-OS-Virtual-Simulator",
+    article: "projects/gorgon.html"
   },
 
   {
@@ -1251,7 +1277,8 @@ const projects = [
       "Deep Q-Learning agent trained to play Snake using PyTorch, Pygame and reinforcement learning.",
     tags: ["ai", "software"],
     date: "2025",
-    repo: "https://github.com/Soala7/Snake-AI"
+    repo: "https://github.com/Soala7/Snake-AI",
+    article: "projects/snake-ai.html"
   },
 
   {
@@ -1260,7 +1287,8 @@ const projects = [
       "A bootable OS kernel experiment using Docker, QEMU, Makefile and x86 Assembly — learning bootloader and kernel basics.",
     tags: ["systems", "software"],
     date: "2025",
-    repo: "https://github.com/Soala7/Mini-Kernel"
+    repo: "https://github.com/Soala7/Mini-Kernel",
+    article: "projects/mini-kernel.html"
   },
 
   {
@@ -1269,7 +1297,8 @@ const projects = [
       "A CHIP-8 emulator written in C — handles CPU instructions, memory, display and input.",
     tags: ["systems", "software"],
     date: "2025",
-    repo: "https://github.com/Soala7/Chip8-Emulator"
+    repo: "https://github.com/Soala7/Chip8-Emulator",
+    article: "projects/chip8.html"
   },
 
   {
@@ -1278,7 +1307,8 @@ const projects = [
       "A custom Unix shell written in C — explores process management, command parsing and shell internals.",
     tags: ["systems", "software"],
     date: "2025",
-    repo: "https://github.com/Soala7/c-unix-shell"
+    repo: "https://github.com/Soala7/c-unix-shell",
+    article: "projects/unix-shell.html"
   },
 
   {
@@ -1287,7 +1317,8 @@ const projects = [
       "A chess game with AI and two-player modes — built with Python and Pygame.",
     tags: ["software", "ai"],
     date: "2025",
-    repo: "https://github.com/Soala7/Chess-game-2.0"
+    repo: "https://github.com/Soala7/Chess-game-2.0",
+    article: "projects/chess.html"
   },
 
   {
@@ -1391,14 +1422,28 @@ function renderProjects(filter = "all") {
 
     card.className = "card project";
 
+    let actionsHtml = '';
+
+    if (project.article) {
+      actionsHtml += `
+        <a href="${project.article}" class="action-link">
+          <i class="fas fa-book-open"></i> Technical Write-up
+        </a>
+      `;
+    }
+
+    actionsHtml += `
+      <a href="${project.repo}" target="_blank" rel="noopener noreferrer" class="action-link">
+        <i class="fab fa-github"></i> GitHub
+      </a>
+    `;
+
     card.innerHTML = `
 
       <div class="project-title">
 
         <strong>
-          <a href="${project.repo}" target="_blank" rel="noopener noreferrer" style="color:#dce5f0;">
-            ${project.title}
-          </a>
+          ${project.article ? `<a href="${project.article}" style="color:#dce5f0;">${project.title}</a>` : project.title}
         </strong>
 
         <span class="muted small">
@@ -1417,10 +1462,10 @@ function renderProjects(filter = "all") {
           .map(tag => `<span class="chip">${tag}</span>`)
           .join("")}
 
-        <a href="${project.repo}" target="_blank" rel="noopener noreferrer" style="font-size:0.75rem;color:#86b7f2;">
-          <i class="fab fa-github"></i> repo
-        </a>
+      </div>
 
+      <div class="project-actions">
+        ${actionsHtml}
       </div>
 
     `;

@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Soala Amachree · C Unix Shell</title>
+
+    <meta name="description" content="Building a Unix shell in C — process management, pipes, redirection and command execution." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #090c11;
+            color: #dce5f0;
+            font-family: "Inter", sans-serif;
+            line-height: 1.7;
+            padding: 24px 16px;
+        }
+
+        a {
+            color: #86b7f2;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #b8d5ff;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .mono {
+            font-family: "JetBrains Mono", monospace;
+        }
+
+        .muted {
+            color: #8492a6;
+        }
+
+        .small {
+            font-size: 0.82rem;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #151d27;
+            border: 1px solid #2a3747;
+            color: #b9c7d7;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.7rem;
+        }
+
+        .chip.used {
+            background: rgba(59, 130, 246, 0.12);
+            border-color: rgba(59, 130, 246, 0.4);
+            color: #8db9ff;
+        }
+
+        .chip.built {
+            background: rgba(34, 197, 94, 0.12);
+            border-color: rgba(34, 197, 94, 0.4);
+            color: #7ee2a8;
+        }
+
+        .card {
+            background: #0e141c;
+            border: 1px solid #202a37;
+            border-radius: 16px;
+            padding: 28px 30px;
+            transition: 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: #344356;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .card-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        .card-header .sub {
+            color: #93a7bd;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #8492a6;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+        }
+
+        .back-link:hover {
+            color: #b8d5ff;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            border-bottom: 1px solid #202a37;
+            padding-bottom: 8px;
+            margin-bottom: 14px;
+            margin-top: 6px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            margin-top: 18px;
+            margin-bottom: 8px;
+            color: #d0dcee;
+        }
+
+        p {
+            color: #b6c4d4;
+            margin-bottom: 10px;
+        }
+
+        .flex-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 10px;
+            align-items: center;
+        }
+
+        .action-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 8px 0 4px;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #151d27;
+            border: 1px solid #2a3747;
+            color: #b9c7d7;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            transition: 0.15s;
+        }
+
+        .action-btn:hover {
+            background: #1e2a38;
+            border-color: #4a6a8a;
+            color: white;
+        }
+
+        .action-btn.primary {
+            background: #1a2a3a;
+            border-color: #3a5a7a;
+            color: #b8d5ff;
+        }
+
+        .action-btn.primary:hover {
+            background: #2a4055;
+            border-color: #5a7a9a;
+        }
+
+        /* Architecture diagram */
+        .arch-diagram {
+            background: #080d13;
+            border: 1px solid #1e2936;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 12px 0 18px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.85rem;
+            line-height: 2;
+            color: #a9b9c9;
+        }
+
+        .arch-diagram .arrow {
+            color: #56687c;
+            margin: 0 6px;
+        }
+
+        .arch-diagram .highlight {
+            color: #d9bd72;
+        }
+
+        .arch-diagram .green {
+            color: #7ee2a8;
+        }
+
+        .arch-diagram .blue {
+            color: #8db9ff;
+        }
+
+        .arch-diagram .purple {
+            color: #c7a1f7;
+        }
+
+        /* Code blocks */
+        pre {
+            background: #080d13;
+            border: 1px solid #1a2430;
+            border-radius: 10px;
+            padding: 16px 18px;
+            overflow-x: auto;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.78rem;
+            line-height: 1.8;
+            color: #c8d4e0;
+            margin: 10px 0 14px;
+        }
+
+        pre .comment {
+            color: #5a6a7a;
+        }
+        pre .keyword {
+            color: #d9bd72;
+        }
+        pre .function {
+            color: #8db9ff;
+        }
+        pre .string {
+            color: #7ee2a8;
+        }
+        pre .type {
+            color: #c7a1f7;
+        }
+
+        /* Terminal simulation */
+        .demo-terminal {
+            background: #070a0f;
+            border: 1px solid #1e2936;
+            border-radius: 12px;
+            padding: 16px 18px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.8rem;
+            color: #a9b9c9;
+            margin: 10px 0 14px;
+            overflow-x: auto;
+        }
+
+        .demo-terminal .prompt {
+            color: #70a47d;
+        }
+
+        .demo-terminal .cmd {
+            color: #d9bd72;
+        }
+
+        .demo-terminal .output {
+            color: #b0c4de;
+            padding-left: 18px;
+        }
+
+        .demo-terminal .highlight {
+            color: #7ee2a8;
+        }
+
+        /* Feature list */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 20px;
+            margin: 8px 0 12px;
+        }
+
+        .feature-grid .item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #b6c4d4;
+            font-size: 0.9rem;
+        }
+
+        .feature-grid .item i {
+            color: #7ee2a8;
+            font-size: 0.75rem;
+        }
+
+        .limitation-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .limitation-list li {
+            color: #b6c4d4;
+            font-size: 0.9rem;
+            padding: 3px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .limitation-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #8492a6;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 12px;
+            margin: 8px 0 4px;
+        }
+
+        .tech-stack .item {
+            background: #111923;
+            border: 1px solid #1f2a36;
+            padding: 4px 14px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            color: #b0c4de;
+        }
+
+        /* Video placeholder */
+        .video-placeholder {
+            background: #080d13;
+            border: 1px solid #1e2936;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            color: #687789;
+            margin: 10px 0 14px;
+        }
+
+        .video-placeholder i {
+            font-size: 2.5rem;
+            color: #4a5a6a;
+            margin-bottom: 8px;
+        }
+
+        .video-placeholder .note {
+            font-size: 0.8rem;
+            color: #5a6a7a;
+        }
+
+        .divider {
+            border: 0;
+            border-top: 1px solid #1a2430;
+            margin: 18px 0;
+        }
+
+        /* Footer */
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px 24px;
+            color: #8392a4;
+            font-size: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #8392a4;
+        }
+
+        .footer-links a:hover {
+            color: #b8d5ff;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 14px 10px;
+            }
+            .card {
+                padding: 18px 16px;
+            }
+            .card-header h1 {
+                font-size: 1.6rem;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            .arch-diagram {
+                font-size: 0.75rem;
+                padding: 14px 16px;
+            }
+            pre {
+                font-size: 0.7rem;
+                padding: 12px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Back link -->
+        <a href="/" class="back-link">
+            <i class="fas fa-arrow-left"></i> back to portfolio
+        </a>
+
+        <!-- Main content -->
+        <div class="card">
+
+            <div class="card-header">
+                <div>
+                    <h1>C Unix Shell</h1>
+                    <div class="sub">A small Unix shell written in C for learning process management, command execution, pipes, and I/O redirection.</div>
+                </div>
+                <div class="flex-wrap">
+                    <span class="chip used">C</span>
+                    <span class="chip used">Linux</span>
+                    <span class="chip used">POSIX</span>
+                    <span class="chip built">2025</span>
+                </div>
+            </div>
+
+            <!-- Action links -->
+            <div class="action-links">
+                <a href="https://github.com/Soala7/c-unix-shell" target="_blank" rel="noopener noreferrer" class="action-btn primary">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+                <a href="#demo" class="action-btn">
+                    <i class="fas fa-play"></i> Watch Demo
+                </a>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Overview -->
+            <h2>Overview</h2>
+            <p>
+                This is a minimal Unix shell written in C. It reads commands from the user, parses them, and executes them —
+                either as built-in commands or by launching external programs. The shell demonstrates core operating-system
+                concepts including process creation, inter-process communication, and file descriptor manipulation.
+            </p>
+
+            <!-- Architecture -->
+            <h2>How a Shell Works</h2>
+            <p>
+                When you type <code class="mono">ls</code> into the shell, it doesn't know how to list files itself.
+                Instead, it performs these steps:
+            </p>
+
+            <div class="arch-diagram">
+                User input<br>
+                <span class="arrow">↓</span><br>
+                <span class="blue">read_line()</span> — reads command from stdin<br>
+                <span class="arrow">↓</span><br>
+                <span class="blue">split_line()</span> — tokenizes with <span class="highlight">strtok()</span><br>
+                <span class="arrow">↓</span><br>
+                <span class="blue">execute()</span> — checks for built-ins, pipes, redirection<br>
+                <span class="arrow">↓</span><br>
+                <span class="highlight">Built-in?</span> ── Yes → <span class="green">built-in function</span><br>
+                <span class="arrow" style="padding-left:120px;">│</span><br>
+                <span class="arrow" style="padding-left:120px;">No</span><br>
+                <span class="arrow">↓</span><br>
+                <span class="blue">launch()</span><br>
+                <span class="arrow">↓</span><br>
+                <span class="blue">fork()</span> — creates a child process<br>
+                <span class="arrow">↓</span><br>
+                <span class="blue">execvp()</span> — replaces child process with the program<br>
+                <span class="arrow">↓</span><br>
+                <span class="blue">waitpid()</span> — waits for the child to finish<br>
+                <span class="arrow">↓</span><br>
+                Shell accepts next command
+            </div>
+
+            <!-- Features -->
+            <h2>Features</h2>
+            <div class="feature-grid">
+                <div class="item"><i class="fas fa-check-circle"></i> Built-in commands (<code>cd</code>, <code>help</code>, <code>about</code>, <code>exit</code>)</div>
+                <div class="item"><i class="fas fa-check-circle"></i> External program execution via <code>execvp()</code></div>
+                <div class="item"><i class="fas fa-check-circle"></i> Process creation with <code>fork()</code></div>
+                <div class="item"><i class="fas fa-check-circle"></i> Process synchronization with <code>waitpid()</code></div>
+                <div class="item"><i class="fas fa-check-circle"></i> Pipes (<code>|</code>) using <code>pipe()</code> and <code>dup2()</code></div>
+                <div class="item"><i class="fas fa-check-circle"></i> Output redirection (<code>&gt;</code>, <code>&gt;&gt;</code>)</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Input redirection (<code>&lt;</code>)</div>
+                <div class="item"><i class="fas fa-check-circle"></i> Dynamic command parsing with <code>strtok()</code></div>
+                <div class="item"><i class="fas fa-check-circle"></i> Memory management with <code>malloc()</code> / <code>realloc()</code></div>
+                <div class="item"><i class="fas fa-check-circle"></i> Filesystem interaction via <code>chdir()</code></div>
+                <div class="item"><i class="fas fa-check-circle"></i> Error handling with <code>perror()</code></div>
+            </div>
+
+            <!-- Implementation -->
+            <h2>Implementation</h2>
+
+            <h3>1. Reading Input</h3>
+            <p>
+                The shell reads commands using <code class="mono">read_line()</code>, which dynamically allocates memory
+                and grows the buffer as needed. It reads character by character until a newline or EOF is encountered.
+            </p>
+
+            <h3>2. Tokenizing Commands</h3>
+            <p>
+                <code class="mono">split_line()</code> uses <code class="mono">strtok()</code> to split the input
+                string into an array of arguments. The delimiter set includes spaces, tabs, newlines, and carriage returns.
+            </p>
+
+            <h3>3. Built-in Commands</h3>
+            <p>
+                The shell implements four built-in commands: <code class="mono">cd</code> (change directory),
+                <code class="mono">help</code> (show available commands), <code class="mono">about</code> (show project info),
+                and <code class="mono">exit</code> (terminate the shell).
+            </p>
+
+            <h3>4. Process Creation</h3>
+            <p>
+                For external commands, the shell uses <code class="mono">fork()</code> to create a child process,
+                then <code class="mono">execvp()</code> to replace the child's memory with the requested program.
+                The parent waits for the child to finish using <code class="mono">waitpid()</code>.
+            </p>
+
+            <h3>5. Pipes</h3>
+            <p>
+                The shell supports single pipes using <code class="mono">pipe()</code>. It creates two child processes:
+                one writes to the pipe, the other reads from it. <code class="mono">dup2()</code> is used to redirect
+                stdout and stdin to the appropriate pipe ends.
+            </p>
+
+            <h3>6. Redirection</h3>
+            <p>
+                The shell handles three types of redirection:
+            </p>
+            <ul style="color:#b6c4d4; padding-left:20px; margin-bottom:10px;">
+                <li><code class="mono">&gt;</code> — redirect stdout to a file (overwrite)</li>
+                <li><code class="mono">&gt;&gt;</code> — redirect stdout to a file (append)</li>
+                <li><code class="mono">&lt;</code> — redirect stdin from a file</li>
+            </ul>
+            <p>
+                These are implemented using <code class="mono">open()</code> and <code class="mono">dup2()</code>
+                to replace the standard file descriptors.
+            </p>
+
+            <!-- Demo -->
+            <h2 id="demo">Demo</h2>
+            <p>
+                Here's a short demonstration of the shell in action:
+            </p>
+
+            <div class="demo-terminal">
+                <div><span class="prompt">$</span> <span class="cmd">help</span></div>
+                <div class="output">This was inspired by Stephen Brennan's LSH</div>
+                <div class="output">This lesson will be used for future plans in Gorgon VOS phase2</div>
+                <div class="output">The available builtin commands are:</div>
+                <div class="output">cd</div>
+                <div class="output">help</div>
+                <div class="output">about</div>
+                <div class="output">exit</div>
+
+                <div style="margin-top:6px;"><span class="prompt">$</span> <span class="cmd">about</span></div>
+                <div class="output">this project was done with less than 3 months of C coding experience</div>
+                <div class="output">I had no formal education in C and only used the info from Stephen Brennan's site</div>
+                <div class="output">Soon I'll create the rest for Phase 2</div>
+
+                <div style="margin-top:6px;"><span class="prompt">$</span> <span class="cmd">ls</span></div>
+                <div class="output">Documents  Downloads  Music  Pictures  test</div>
+
+                <div style="margin-top:6px;"><span class="prompt">$</span> <span class="cmd">mkdir test</span></div>
+                <div style="margin-top:6px;"><span class="prompt">$</span> <span class="cmd">touch test/example.txt</span></div>
+                <div style="margin-top:6px;"><span class="prompt">$</span> <span class="cmd">ls test</span></div>
+                <div class="output">example.txt</div>
+
+                <div style="margin-top:6px;"><span class="prompt">$</span> <span class="cmd">echo "Hello from lsk" &gt; output.txt</span></div>
+                <div style="margin-top:6px;"><span class="prompt">$</span> <span class="cmd">cat output.txt</span></div>
+                <div class="output">Hello from lsk</div>
+
+                <div style="margin-top:6px;"><span class="prompt">$</span> <span class="cmd">ls | grep output</span></div>
+                <div class="output">output.txt</div>
+            </div>
+
+            <p class="muted small">
+                <i class="fas fa-info-circle"></i> Commands like <code>ls</code>, <code>mkdir</code>, <code>touch</code>,
+                <code>echo</code>, <code>cat</code>, and <code>grep</code> are external programs launched via <code>execvp()</code>.
+            </p>
+
+            <!-- What I Learned -->
+            <h2>What I Learned</h2>
+            <ul style="color:#b6c4d4; padding-left:20px; margin-bottom:10px;">
+                <li>How Unix processes are created and managed with <code>fork()</code> and <code>exec()</code></li>
+                <li>How to interpret the encoded child-process status using <code>WIFEXITED()</code> and <code>WIFSIGNALED()</code></li>
+                <li>How pipes work as a form of inter-process communication</li>
+                <li>How file descriptors can be duplicated and redirected</li>
+                <li>How to parse user input and handle dynamic memory allocation</li>
+                <li>How to implement built-in shell commands</li>
+            </ul>
+
+            <!-- Challenges -->
+            <h2>Challenges</h2>
+            <ul style="color:#b6c4d4; padding-left:20px; margin-bottom:10px;">
+                <li>Understanding the difference between <code>execvp()</code> and <code>system()</code></li>
+                <li>Managing memory correctly with <code>malloc()</code> and <code>realloc()</code></li>
+                <li>Handling the edge cases in the parser (empty input, trailing spaces)</li>
+                <li>Debugging pipe and redirection issues with <code>dup2()</code></li>
+                <li>Learning the <code>waitpid()</code> status encoding</li>
+            </ul>
+
+            <!-- Limitations -->
+            <h2>Limitations</h2>
+            <p>
+                This is a learning project and has several limitations compared to full-featured shells like Bash or Zsh:
+            </p>
+            <ul class="limitation-list">
+                <li>No support for quoted arguments (e.g., <code>echo "hello world"</code>)</li>
+                <li>Only single pipes are supported (<code>cmd1 | cmd2</code>)</li>
+                <li>No support for <code>2&gt;</code> (stderr) redirection</li>
+                <li>No background job support (<code>&amp;</code>)</li>
+                <li>No job control or signals handling</li>
+                <li>Simple parser — doesn't handle complex shell grammar</li>
+            </ul>
+
+            <!-- Future Improvements -->
+            <h2>Future Improvements</h2>
+            <ul style="color:#b6c4d4; padding-left:20px; margin-bottom:10px;">
+                <li>Add support for quoted arguments</li>
+                <li>Support multiple pipes (<code>cmd1 | cmd2 | cmd3</code>)</li>
+                <li>Add <code>2&gt;</code> and <code>2&gt;&gt;</code> redirection</li>
+                <li>Implement background execution with <code>&amp;</code></li>
+                <li>Add command history with <code>up</code> arrow</li>
+                <li>Add tab completion for filenames and commands</li>
+            </ul>
+
+            <!-- Tech Stack -->
+            <hr class="divider">
+            <div class="tech-stack">
+                <span class="item">C</span>
+                <span class="item">Linux</span>
+                <span class="item">GCC</span>
+                <span class="item">Unix/POSIX APIs</span>
+                <span class="item">fork() / exec()</span>
+                <span class="item">pipe() / dup2()</span>
+                <span class="item">strtok()</span>
+                <span class="item">Makefile</span>
+            </div>
+
+            <p class="muted small" style="margin-top:12px;">
+                <i class="fas fa-code"></i> Built with &lt;300 lines of C, inspired by Stephen Brennan's LSH tutorial.
+            </p>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-links">
+            <a href="/"><i class="fas fa-home"></i> soala.dev</a>
+            <a href="https://github.com/Soala7" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a>
+            <a href="https://www.linkedin.com/in/soala-amachree" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i> LinkedIn</a>
+            <span class="muted">Static HTML · CSS · JavaScript</span>
+        </div>
+
+    </div>
+
+</body>
+</html>

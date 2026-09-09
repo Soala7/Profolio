@@ -9,30 +9,54 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 
     <style>
+        :root {
+            --bg: #f7f6f2;
+            --surface: #ffffff;
+            --surface-soft: #f1f0eb;
+            --text: #1f1f1d;
+            --text-soft: #6b6a65;
+            --text-muted: #92908a;
+            --border: #e4e2dc;
+            --border-dark: #d3d0c8;
+            --accent: #d97745;
+            --accent-dark: #b95c2e;
+            --accent-soft: #f5e5db;
+            --green: #4d7c5b;
+            --green-soft: #e5eee7;
+            --blue: #536b8c;
+            --blue-soft: #e8edf4;
+            --purple: #75658e;
+            --purple-soft: #ece8f2;
+            --radius: 18px;
+            --radius-small: 11px;
+            --shadow: 0 1px 2px rgba(0,0,0,.03), 0 8px 30px rgba(0,0,0,.035);
+            --max-width: 1180px;
+        }
+
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
-            background: #090c11;
-            color: #dce5f0;
-            font-family: "Inter", sans-serif;
-            line-height: 1.7;
+            background: var(--bg);
+            color: var(--text);
+            font-family: "DM Sans", sans-serif;
+            line-height: 1.65;
             padding: 24px 16px;
         }
 
         a {
-            color: #86b7f2;
+            color: var(--accent);
             text-decoration: none;
         }
         a:hover {
-            color: #b8d5ff;
+            color: var(--accent-dark);
         }
 
         .container {
@@ -48,7 +72,7 @@
         }
 
         .muted {
-            color: #8492a6;
+            color: var(--text-muted);
         }
 
         .small {
@@ -59,42 +83,50 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: #151d27;
-            border: 1px solid #2a3747;
-            color: #b9c7d7;
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
+            color: var(--text-soft);
             padding: 3px 10px;
             border-radius: 999px;
             font-size: 0.7rem;
+            font-weight: 500;
         }
 
         .chip.used {
-            background: rgba(59, 130, 246, 0.12);
-            border-color: rgba(59, 130, 246, 0.4);
-            color: #8db9ff;
+            background: var(--blue-soft);
+            border-color: #c0cfe0;
+            color: var(--blue);
         }
 
         .chip.built {
-            background: rgba(34, 197, 94, 0.12);
-            border-color: rgba(34, 197, 94, 0.4);
-            color: #7ee2a8;
+            background: var(--green-soft);
+            border-color: #b8d5c0;
+            color: var(--green);
         }
 
         .chip.learning {
-            background: rgba(245, 158, 11, 0.12);
-            border-color: rgba(245, 158, 11, 0.4);
-            color: #f5c76b;
+            background: #f5f0e0;
+            border-color: #e0d8b0;
+            color: #8a7a3a;
+        }
+
+        .chip.accent {
+            background: var(--accent-soft);
+            border-color: #e7cbbb;
+            color: var(--accent-dark);
         }
 
         .card {
-            background: #0e141c;
-            border: 1px solid #202a37;
-            border-radius: 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
             padding: 28px 30px;
-            transition: 0.2s ease;
+            transition: 0.15s ease;
+            box-shadow: var(--shadow);
         }
 
         .card:hover {
-            border-color: #344356;
+            border-color: var(--border-dark);
         }
 
         .card-header {
@@ -113,7 +145,7 @@
         }
 
         .card-header .sub {
-            color: #93a7bd;
+            color: var(--text-soft);
             font-family: "JetBrains Mono", monospace;
             font-size: 0.9rem;
         }
@@ -122,18 +154,21 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            color: #8492a6;
+            color: var(--text-muted);
             font-size: 0.85rem;
             margin-bottom: 12px;
+            transition: color .2s ease;
         }
 
         .back-link:hover {
-            color: #b8d5ff;
+            color: var(--text);
         }
 
         h2 {
             font-size: 1.4rem;
-            border-bottom: 1px solid #202a37;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            border-bottom: 1px solid var(--border);
             padding-bottom: 8px;
             margin-bottom: 14px;
             margin-top: 6px;
@@ -141,13 +176,14 @@
 
         h3 {
             font-size: 1.1rem;
+            font-weight: 600;
             margin-top: 18px;
             margin-bottom: 8px;
-            color: #d0dcee;
+            color: var(--text);
         }
 
         p {
-            color: #b6c4d4;
+            color: var(--text-soft);
             margin-bottom: 10px;
         }
 
@@ -169,119 +205,122 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: #151d27;
-            border: 1px solid #2a3747;
-            color: #b9c7d7;
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
+            color: var(--text-soft);
             padding: 6px 16px;
             border-radius: 999px;
             font-size: 0.8rem;
+            font-weight: 500;
             transition: 0.15s;
         }
 
         .action-btn:hover {
-            background: #1e2a38;
-            border-color: #4a6a8a;
-            color: white;
+            background: var(--surface);
+            border-color: var(--border-dark);
+            color: var(--text);
+            transform: translateY(-2px);
         }
 
         .action-btn.primary {
-            background: #1a2a3a;
-            border-color: #3a5a7a;
-            color: #b8d5ff;
+            background: var(--text);
+            border-color: var(--text);
+            color: white;
         }
 
         .action-btn.primary:hover {
-            background: #2a4055;
-            border-color: #5a7a9a;
+            background: #2a2a28;
+            border-color: #2a2a28;
+            color: white;
         }
 
         .arch-diagram {
-            background: #080d13;
-            border: 1px solid #1e2936;
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 20px 24px;
             margin: 12px 0 18px;
             font-family: "JetBrains Mono", monospace;
             font-size: 0.85rem;
             line-height: 2.2;
-            color: #a9b9c9;
+            color: var(--text-soft);
         }
 
         .arch-diagram .arrow {
-            color: #56687c;
+            color: var(--text-muted);
             margin: 0 6px;
         }
 
         .arch-diagram .highlight {
-            color: #d9bd72;
+            color: var(--accent-dark);
         }
 
         .arch-diagram .green {
-            color: #7ee2a8;
+            color: var(--green);
         }
 
         .arch-diagram .blue {
-            color: #8db9ff;
+            color: var(--blue);
         }
 
         .arch-diagram .purple {
-            color: #c7a1f7;
+            color: var(--purple);
         }
 
         .arch-diagram .yellow {
-            color: #f5c76b;
+            color: #b0952a;
         }
 
         pre {
-            background: #080d13;
-            border: 1px solid #1a2430;
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
             border-radius: 10px;
             padding: 16px 18px;
             overflow-x: auto;
             font-family: "JetBrains Mono", monospace;
             font-size: 0.78rem;
             line-height: 1.8;
-            color: #c8d4e0;
+            color: var(--text-soft);
             margin: 10px 0 14px;
         }
 
         pre .comment {
-            color: #5a6a7a;
+            color: var(--text-muted);
         }
         pre .keyword {
-            color: #d9bd72;
+            color: var(--accent-dark);
         }
         pre .function {
-            color: #8db9ff;
+            color: var(--blue);
         }
         pre .string {
-            color: #7ee2a8;
+            color: var(--green);
         }
         pre .type {
-            color: #c7a1f7;
+            color: var(--purple);
         }
         pre .directive {
-            color: #f5c76b;
+            color: #b0952a;
         }
 
         .demo-terminal {
-            background: #070a0f;
-            border: 1px solid #1e2936;
+            background: #20201e;
+            border: 1px solid #30302d;
             border-radius: 12px;
             padding: 16px 18px;
             font-family: "JetBrains Mono", monospace;
             font-size: 0.8rem;
-            color: #a9b9c9;
+            color: #d1d0ca;
             margin: 10px 0 14px;
             overflow-x: auto;
         }
 
         .demo-terminal .prompt {
-            color: #70a47d;
+            color: #d58b64;
         }
 
         .demo-terminal .cmd {
-            color: #d9bd72;
+            color: #f5c76b;
         }
 
         .demo-terminal .output {
@@ -304,12 +343,12 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            color: #b6c4d4;
+            color: var(--text-soft);
             font-size: 0.9rem;
         }
 
         .feature-grid .item i {
-            color: #7ee2a8;
+            color: var(--green);
             font-size: 0.75rem;
         }
 
@@ -319,7 +358,7 @@
         }
 
         .limitation-list li {
-            color: #b6c4d4;
+            color: var(--text-soft);
             font-size: 0.9rem;
             padding: 3px 0;
             padding-left: 20px;
@@ -330,7 +369,7 @@
             content: "•";
             position: absolute;
             left: 0;
-            color: #8492a6;
+            color: var(--text-muted);
         }
 
         .tech-stack {
@@ -341,19 +380,19 @@
         }
 
         .tech-stack .item {
-            background: #111923;
-            border: 1px solid #1f2a36;
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
             padding: 4px 14px;
             border-radius: 999px;
             font-size: 0.78rem;
-            color: #b0c4de;
+            color: var(--text-soft);
         }
 
         .qemu-display {
             background: #000000;
-            border: 2px solid #2a3747;
+            border: 2px solid var(--border-dark);
             border-radius: 10px;
-            padding: 12px;
+            padding: 0;
             margin: 10px 0 14px;
             overflow: hidden;
             aspect-ratio: 16 / 10;
@@ -369,87 +408,12 @@
             height: 100%;
             object-fit: cover;
             object-position: center;
-            border-radius: 8px;
-            transform: scale(1.08);
-            transform-origin: center;
             background: #0a0a0a;
-        }
-
-        .qemu-display .screen-content {
-            font-family: "JetBrains Mono", monospace;
-            font-size: 1.2rem;
-            color: #7ee2a8;
-            padding: 20px;
-            line-height: 1.8;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: #0a0a0a;
-        }
-
-        .qemu-display .screen-content .header {
-            color: #8db9ff;
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .qemu-display .screen-content .sub {
-            color: #f5c76b;
-            font-size: 1rem;
-        }
-
-        .qemu-display .screen-content .info {
-            color: #8492a6;
-            font-size: 0.8rem;
-            margin-top: 4px;
-        }
-
-        .qemu-display .screen-content .cursor {
-            display: inline-block;
-            width: 10px;
-            height: 18px;
-            background: #7ee2a8;
-            animation: blink 1s step-end infinite;
-            vertical-align: text-bottom;
-        }
-
-        @keyframes blink {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0;
-            }
-        }
-
-        .qemu-display .screen-content .line {
-            display: flex;
-            gap: 8px;
-            width: 100%;
-            max-width: 600px;
-        }
-
-        .qemu-display .screen-content .line .label {
-            color: #70a47d;
-            min-width: 60px;
-        }
-
-        .qemu-display .screen-content .line .value {
-            color: #b0c4de;
-        }
-
-        .qemu-display .screen-content .line .value.green {
-            color: #7ee2a8;
         }
 
         .divider {
             border: 0;
-            border-top: 1px solid #1a2430;
+            border-top: 1px solid var(--border);
             margin: 18px 0;
         }
 
@@ -457,41 +421,41 @@
             display: flex;
             flex-wrap: wrap;
             gap: 14px 24px;
-            color: #8392a4;
+            color: var(--text-muted);
             font-size: 0.8rem;
         }
 
         .footer-links a {
-            color: #8392a4;
+            color: var(--text-muted);
         }
 
         .footer-links a:hover {
-            color: #b8d5ff;
+            color: var(--text);
         }
 
         .file-tree {
-            background: #080d13;
-            border: 1px solid #1a2430;
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
             border-radius: 10px;
             padding: 16px 20px;
             font-family: "JetBrains Mono", monospace;
             font-size: 0.78rem;
             line-height: 1.9;
-            color: #a9b9c9;
+            color: var(--text-soft);
             margin: 8px 0 14px;
             overflow-x: auto;
         }
 
         .file-tree .dir {
-            color: #8db9ff;
+            color: var(--blue);
         }
 
         .file-tree .file {
-            color: #b0c4de;
+            color: var(--text-soft);
         }
 
         .file-tree .highlight {
-            color: #d9bd72;
+            color: var(--accent-dark);
         }
 
         @media (max-width: 700px) {
@@ -522,16 +486,6 @@
             .qemu-display .screen-content {
                 font-size: 0.9rem;
                 padding: 12px;
-            }
-            .qemu-display .screen-content .header {
-                font-size: 1.1rem;
-            }
-            .qemu-display .screen-content .line {
-                flex-direction: column;
-                gap: 2px;
-            }
-            .qemu-display .screen-content .line .label {
-                min-width: auto;
             }
         }
     </style>
@@ -766,7 +720,7 @@
                 <span class="yellow">Hardware / VGA Memory</span>
             </div>
 
-            <ul style="color:#b6c4d4; padding-left:20px; margin-bottom:10px;">
+            <ul style="color:var(--text-soft); padding-left:20px; margin-bottom:10px;">
                 <li>How the CPU transitions from 16-bit real mode → 32-bit protected mode → 64-bit long mode</li>
                 <li>How GRUB and the Multiboot2 standard work</li>
                 <li>How to set up GDT entries for 64-bit code and data segments</li>
@@ -778,7 +732,7 @@
 
             <!-- Challenges -->
             <h2>Challenges</h2>
-            <ul style="color:#b6c4d4; padding-left:20px; margin-bottom:10px;">
+            <ul style="color:var(--text-soft); padding-left:20px; margin-bottom:10px;">
                 <li>Understanding the x86_64 memory model and paging structure</li>
                 <li>Getting the linker script correct for the 64-bit kernel</li>
                 <li>Debugging the transition from 32-bit to 64-bit mode</li>

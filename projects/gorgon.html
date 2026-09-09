@@ -9,30 +9,54 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 
     <style>
+        :root {
+            --bg: #f7f6f2;
+            --surface: #ffffff;
+            --surface-soft: #f1f0eb;
+            --text: #1f1f1d;
+            --text-soft: #6b6a65;
+            --text-muted: #92908a;
+            --border: #e4e2dc;
+            --border-dark: #d3d0c8;
+            --accent: #d97745;
+            --accent-dark: #b95c2e;
+            --accent-soft: #f5e5db;
+            --green: #4d7c5b;
+            --green-soft: #e5eee7;
+            --blue: #536b8c;
+            --blue-soft: #e8edf4;
+            --purple: #75658e;
+            --purple-soft: #ece8f2;
+            --radius: 18px;
+            --radius-small: 11px;
+            --shadow: 0 1px 2px rgba(0,0,0,.03), 0 8px 30px rgba(0,0,0,.035);
+            --max-width: 1180px;
+        }
+
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
-            background: #090c11;
-            color: #dce5f0;
-            font-family: "Inter", sans-serif;
-            line-height: 1.7;
+            background: var(--bg);
+            color: var(--text);
+            font-family: "DM Sans", sans-serif;
+            line-height: 1.65;
             padding: 24px 16px;
         }
 
         a {
-            color: #86b7f2;
+            color: var(--accent);
             text-decoration: none;
         }
         a:hover {
-            color: #b8d5ff;
+            color: var(--accent-dark);
         }
 
         .container {
@@ -48,7 +72,7 @@
         }
 
         .muted {
-            color: #8492a6;
+            color: var(--text-muted);
         }
 
         .small {
@@ -59,42 +83,50 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: #151d27;
-            border: 1px solid #2a3747;
-            color: #b9c7d7;
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
+            color: var(--text-soft);
             padding: 3px 10px;
             border-radius: 999px;
             font-size: 0.7rem;
+            font-weight: 500;
         }
 
         .chip.used {
-            background: rgba(59, 130, 246, 0.12);
-            border-color: rgba(59, 130, 246, 0.4);
-            color: #8db9ff;
+            background: var(--blue-soft);
+            border-color: #c0cfe0;
+            color: var(--blue);
         }
 
         .chip.built {
-            background: rgba(34, 197, 94, 0.12);
-            border-color: rgba(34, 197, 94, 0.4);
-            color: #7ee2a8;
+            background: var(--green-soft);
+            border-color: #b8d5c0;
+            color: var(--green);
         }
 
         .chip.learning {
-            background: rgba(245, 158, 11, 0.12);
-            border-color: rgba(245, 158, 11, 0.4);
-            color: #f5c76b;
+            background: #f5f0e0;
+            border-color: #e0d8b0;
+            color: #8a7a3a;
+        }
+
+        .chip.accent {
+            background: var(--accent-soft);
+            border-color: #e7cbbb;
+            color: var(--accent-dark);
         }
 
         .card {
-            background: #0e141c;
-            border: 1px solid #202a37;
-            border-radius: 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
             padding: 28px 30px;
-            transition: 0.2s ease;
+            transition: 0.15s ease;
+            box-shadow: var(--shadow);
         }
 
         .card:hover {
-            border-color: #344356;
+            border-color: var(--border-dark);
         }
 
         .card-header {
@@ -113,7 +145,7 @@
         }
 
         .card-header .sub {
-            color: #93a7bd;
+            color: var(--text-soft);
             font-family: "JetBrains Mono", monospace;
             font-size: 0.9rem;
         }
@@ -122,18 +154,21 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            color: #8492a6;
+            color: var(--text-muted);
             font-size: 0.85rem;
             margin-bottom: 12px;
+            transition: color .2s ease;
         }
 
         .back-link:hover {
-            color: #b8d5ff;
+            color: var(--text);
         }
 
         h2 {
             font-size: 1.4rem;
-            border-bottom: 1px solid #202a37;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            border-bottom: 1px solid var(--border);
             padding-bottom: 8px;
             margin-bottom: 14px;
             margin-top: 6px;
@@ -141,13 +176,14 @@
 
         h3 {
             font-size: 1.1rem;
+            font-weight: 600;
             margin-top: 18px;
             margin-bottom: 8px;
-            color: #d0dcee;
+            color: var(--text);
         }
 
         p {
-            color: #b6c4d4;
+            color: var(--text-soft);
             margin-bottom: 10px;
         }
 
@@ -169,116 +205,119 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: #151d27;
-            border: 1px solid #2a3747;
-            color: #b9c7d7;
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
+            color: var(--text-soft);
             padding: 6px 16px;
             border-radius: 999px;
             font-size: 0.8rem;
+            font-weight: 500;
             transition: 0.15s;
         }
 
         .action-btn:hover {
-            background: #1e2a38;
-            border-color: #4a6a8a;
-            color: white;
+            background: var(--surface);
+            border-color: var(--border-dark);
+            color: var(--text);
+            transform: translateY(-2px);
         }
 
         .action-btn.primary {
-            background: #1a2a3a;
-            border-color: #3a5a7a;
-            color: #b8d5ff;
+            background: var(--text);
+            border-color: var(--text);
+            color: white;
         }
 
         .action-btn.primary:hover {
-            background: #2a4055;
-            border-color: #5a7a9a;
+            background: #2a2a28;
+            border-color: #2a2a28;
+            color: white;
         }
 
         .arch-diagram {
-            background: #080d13;
-            border: 1px solid #1e2936;
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 20px 24px;
             margin: 12px 0 18px;
             font-family: "JetBrains Mono", monospace;
             font-size: 0.85rem;
             line-height: 2.2;
-            color: #a9b9c9;
+            color: var(--text-soft);
         }
 
         .arch-diagram .arrow {
-            color: #56687c;
+            color: var(--text-muted);
             margin: 0 6px;
         }
 
         .arch-diagram .highlight {
-            color: #d9bd72;
+            color: var(--accent-dark);
         }
 
         .arch-diagram .green {
-            color: #7ee2a8;
+            color: var(--green);
         }
 
         .arch-diagram .blue {
-            color: #8db9ff;
+            color: var(--blue);
         }
 
         .arch-diagram .purple {
-            color: #c7a1f7;
+            color: var(--purple);
         }
 
         .arch-diagram .yellow {
-            color: #f5c76b;
+            color: #b0952a;
         }
 
         pre {
-            background: #080d13;
-            border: 1px solid #1a2430;
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
             border-radius: 10px;
             padding: 16px 18px;
             overflow-x: auto;
             font-family: "JetBrains Mono", monospace;
             font-size: 0.78rem;
             line-height: 1.8;
-            color: #c8d4e0;
+            color: var(--text-soft);
             margin: 10px 0 14px;
         }
 
         pre .comment {
-            color: #5a6a7a;
+            color: var(--text-muted);
         }
         pre .keyword {
-            color: #d9bd72;
+            color: var(--accent-dark);
         }
         pre .function {
-            color: #8db9ff;
+            color: var(--blue);
         }
         pre .string {
-            color: #7ee2a8;
+            color: var(--green);
         }
         pre .type {
-            color: #c7a1f7;
+            color: var(--purple);
         }
 
         .demo-terminal {
-            background: #070a0f;
-            border: 1px solid #1e2936;
+            background: #20201e;
+            border: 1px solid #30302d;
             border-radius: 12px;
             padding: 16px 18px;
             font-family: "JetBrains Mono", monospace;
             font-size: 0.8rem;
-            color: #a9b9c9;
+            color: #d1d0ca;
             margin: 10px 0 14px;
             overflow-x: auto;
         }
 
         .demo-terminal .prompt {
-            color: #70a47d;
+            color: #d58b64;
         }
 
         .demo-terminal .cmd {
-            color: #d9bd72;
+            color: #f5c76b;
         }
 
         .demo-terminal .output {
@@ -301,43 +340,43 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            color: #b6c4d4;
+            color: var(--text-soft);
             font-size: 0.9rem;
         }
 
         .feature-grid .item i {
-            color: #7ee2a8;
+            color: var(--green);
             font-size: 0.75rem;
         }
 
         .file-tree {
-            background: #080d13;
-            border: 1px solid #1a2430;
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
             border-radius: 10px;
             padding: 16px 20px;
             font-family: "JetBrains Mono", monospace;
             font-size: 0.78rem;
             line-height: 1.9;
-            color: #a9b9c9;
+            color: var(--text-soft);
             margin: 8px 0 14px;
             overflow-x: auto;
         }
 
         .file-tree .dir {
-            color: #8db9ff;
+            color: var(--blue);
         }
 
         .file-tree .file {
-            color: #b0c4de;
+            color: var(--text-soft);
         }
 
         .file-tree .highlight {
-            color: #d9bd72;
+            color: var(--accent-dark);
         }
 
         .video-container {
-            background: #080d13;
-            border: 1px solid #1e2936;
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 0;
             margin: 10px 0 14px;
@@ -354,19 +393,19 @@
         .video-container .video-fallback {
             padding: 60px 20px;
             text-align: center;
-            color: #687789;
-            background: #0a0a0a;
+            color: var(--text-muted);
+            background: var(--surface-soft);
         }
 
         .video-container .video-fallback i {
             font-size: 3rem;
-            color: #4a5a6a;
+            color: var(--text-muted);
             margin-bottom: 10px;
         }
 
         .video-container .video-fallback .note {
             font-size: 0.8rem;
-            color: #5a6a7a;
+            color: var(--text-muted);
         }
 
         .screenshot-grid {
@@ -377,8 +416,8 @@
         }
 
         .screenshot-grid .screenshot {
-            background: #080d13;
-            border: 1px solid #1e2936;
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
             border-radius: 10px;
             padding: 12px;
             text-align: center;
@@ -390,22 +429,18 @@
         .screenshot-grid .screenshot img {
             display: block;
             width: 100%;
-            height: 180px;
+            height: 160px;
             object-fit: cover;
             object-position: center top;
             border-radius: 8px;
-            border: 1px solid #1e2936;
-            background: #0a1017;
-        }
-
-        .screenshot-grid .screenshot .placeholder {
-            display: none;
+            border: 1px solid var(--border);
+            background: var(--surface-soft);
         }
 
         .screenshot-grid .screenshot .caption {
             margin-top: 0;
             font-size: 0.75rem;
-            color: #8492a6;
+            color: var(--text-muted);
         }
 
         .roadmap {
@@ -416,8 +451,8 @@
         }
 
         .roadmap .phase {
-            background: #080d13;
-            border: 1px solid #1e2936;
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
             border-radius: 10px;
             padding: 14px 16px;
             text-align: center;
@@ -429,26 +464,27 @@
             padding: 2px 10px;
             border-radius: 999px;
             display: inline-block;
+            font-weight: 500;
         }
 
         .roadmap .phase .status.complete {
-            background: rgba(34, 197, 94, 0.15);
-            color: #7ee2a8;
+            background: var(--green-soft);
+            color: var(--green);
         }
 
         .roadmap .phase .status.planned {
-            background: rgba(245, 158, 11, 0.15);
-            color: #f5c76b;
+            background: #f5f0e0;
+            color: #8a7a3a;
         }
 
         .roadmap .phase .status.future {
-            background: rgba(168, 85, 247, 0.15);
-            color: #c7a1f7;
+            background: var(--purple-soft);
+            color: var(--purple);
         }
 
         .divider {
             border: 0;
-            border-top: 1px solid #1a2430;
+            border-top: 1px solid var(--border);
             margin: 18px 0;
         }
 
@@ -456,16 +492,16 @@
             display: flex;
             flex-wrap: wrap;
             gap: 14px 24px;
-            color: #8392a4;
+            color: var(--text-muted);
             font-size: 0.8rem;
         }
 
         .footer-links a {
-            color: #8392a4;
+            color: var(--text-muted);
         }
 
         .footer-links a:hover {
-            color: #b8d5ff;
+            color: var(--text);
         }
 
         @media (max-width: 700px) {
@@ -548,20 +584,35 @@
             <div class="roadmap">
                 <div class="phase">
                     <strong>Phase 1</strong>
-                    <div style="font-size:0.8rem; color:#8492a6;">Simulator</div>
+                    <div style="font-size:0.8rem; color:var(--text-muted);">Simulator</div>
                     <div class="status complete">✅ Complete</div>
                 </div>
                 <div class="phase">
                     <strong>Phase 2</strong>
-                    <div style="font-size:0.8rem; color:#8492a6;">Real OS</div>
-                    <div class="status planned">⏳ Planned</div>
+                    <div style="font-size:0.8rem; color:var(--text-muted);">Custom OS</div>
+                    <div class="status planned">⏳ In Progress</div>
                 </div>
                 <div class="phase">
                     <strong>Phase 3</strong>
-                    <div style="font-size:0.8rem; color:#8492a6;">Linux distro</div>
+                    <div style="font-size:0.8rem; color:var(--text-muted);">Linux Distro</div>
                     <div class="status future">🔮 Future</div>
                 </div>
             </div>
+
+            <p>
+                <span class="chip" style="background:var(--green-soft); border-color:#b8d5c0; color:var(--green);">
+                    <i class="fas fa-check"></i> Phase 1 is complete
+                </span>
+                <span class="chip" style="background:#f5f0e0; border-color:#e0d8b0; color:#8a7a3a; margin-left:8px;">
+                    <i class="fas fa-spinner"></i> Phase 2 is actively being worked on
+                </span>
+            </p>
+
+            <!-- Phase 1 Details -->
+            <h2>Phase 1 — Simulator</h2>
+            <p>
+                Phase 1 focused on creating a functional simulated operating-system environment where applications, filesystems, storage, windows, and system components could communicate with each other. This phase gave me a foundation for understanding how the different parts of an operating system fit together before moving toward lower-level development.
+            </p>
 
             <!-- Demo Video -->
             <h2 id="demo">Demo</h2>
@@ -574,7 +625,7 @@
                     <source src="../assets/vos-demo.mp4" type="video/mp4">
                     <div class="video-fallback">
                         <i class="fas fa-play-circle"></i>
-                        <div style="font-weight:500; color:#9aabba;">🖥️ VOS Desktop Walkthrough</div>
+                        <div style="font-weight:500; color:var(--text-soft);">🖥️ VOS Desktop Walkthrough</div>
                         <div class="note">Your browser doesn't support the video tag.</div>
                         <div class="note" style="margin-top:6px;">Demo showing the desktop, launcher, terminal, file explorer, and text editor.</div>
                     </div>
@@ -607,23 +658,23 @@
             <h2>Architecture</h2>
 
             <div class="arch-diagram">
-                <span style="color:#7ee2a8;">VOS Desktop</span><br>
+                <span class="green">VOS Desktop</span><br>
                 <span class="arrow">│</span><br>
-                <span style="color:#8db9ff;">Application Manager</span><br>
-                <span class="arrow">├──</span> <span style="color:#d9bd72;">Explorer</span><br>
-                <span class="arrow">├──</span> <span style="color:#d9bd72;">Editor</span><br>
-                <span class="arrow">├──</span> <span style="color:#d9bd72;">Terminal</span><br>
-                <span class="arrow">├──</span> <span style="color:#d9bd72;">Browser</span><br>
-                <span class="arrow">├──</span> <span style="color:#d9bd72;">Music Player</span><br>
-                <span class="arrow">└──</span> <span style="color:#d9bd72;">Game</span><br>
+                <span class="blue">Application Manager</span><br>
+                <span class="arrow">├──</span> <span class="highlight">Explorer</span><br>
+                <span class="arrow">├──</span> <span class="highlight">Editor</span><br>
+                <span class="arrow">├──</span> <span class="highlight">Terminal</span><br>
+                <span class="arrow">├──</span> <span class="highlight">Browser</span><br>
+                <span class="arrow">├──</span> <span class="highlight">Music Player</span><br>
+                <span class="arrow">└──</span> <span class="highlight">Game</span><br>
                 <span class="arrow">│</span><br>
-                <span style="color:#f5c76b;">VOS System Layer</span><br>
+                <span class="yellow">VOS System Layer</span><br>
                 <span class="arrow">│</span><br>
-                <span style="color:#c7a1f7;">Virtual Filesystem</span><br>
+                <span class="purple">Virtual Filesystem</span><br>
                 <span class="arrow">│</span><br>
-                <span style="color:#8db9ff;">Virtual Storage</span><br>
+                <span class="blue">Virtual Storage</span><br>
                 <span class="arrow">│</span><br>
-                <span style="color:#8492a6;">Host Computer</span>
+                <span class="muted">Host Computer</span>
             </div>
 
             <p>
@@ -631,7 +682,7 @@
             </p>
 
             <!-- Features -->
-            <h2>Features</h2>
+            <h2>Phase 1 — Completed Features</h2>
             <div class="feature-grid">
                 <div class="item"><i class="fas fa-check-circle"></i> Virtual desktop environment</div>
                 <div class="item"><i class="fas fa-check-circle"></i> Window management system</div>
@@ -711,7 +762,7 @@
 
             <!-- What I Learned -->
             <h2>What I Learned</h2>
-            <ul style="color:#b6c4d4; padding-left:20px; margin-bottom:10px;">
+            <ul style="color:var(--text-soft); padding-left:20px; margin-bottom:10px;">
                 <li>How the major components of an operating system fit together</li>
                 <li>How to design and implement a virtual filesystem</li>
                 <li>How window management and application lifecycles work</li>
@@ -723,13 +774,44 @@
 
             <!-- Challenges -->
             <h2>Challenges</h2>
-            <ul style="color:#b6c4d4; padding-left:20px; margin-bottom:10px;">
+            <ul style="color:var(--text-soft); padding-left:20px; margin-bottom:10px;">
                 <li>Designing a filesystem that feels like a real OS</li>
                 <li>Building a shell that can execute both built-ins and communicate with the system</li>
                 <li>Creating a window manager that handles multiple applications</li>
                 <li>Making the system feel like a cohesive OS rather than separate apps</li>
                 <li>Managing state between applications and the filesystem</li>
             </ul>
+
+            <!-- Phase 2 Preview -->
+            <h2>Phase 2 — Semi-real (In Progress)</h2>
+            <p>
+                The goal of Phase 2 is to gradually move away from purely simulated components and begin implementing more realistic system-level functionality. This phase involves significantly more work with:
+            </p>
+            <ul style="color:var(--text-soft); padding-left:20px; margin-bottom:10px;">
+                <li>C and C++ for core system components</li>
+                <li>Computer architecture and memory management</li>
+                <li>Hardware interaction and drivers</li>
+                <li>Process management and low-level storage</li>
+                <li>Networking and system interfaces</li>
+            </ul>
+            <p class="muted small">
+                <i class="fas fa-spinner"></i> Phase 2 is currently in development.
+            </p>
+
+            <!-- Phase 3 Preview -->
+            <h2>Phase 3 — Real OS (Future)</h2>
+            <p>
+                The long-term goal is to move beyond simulation and begin building an actual operating system capable of interacting directly with hardware. This will involve:
+            </p>
+            <ul style="color:var(--text-soft); padding-left:20px; margin-bottom:10px;">
+                <li>Boot process and kernel development</li>
+                <li>Memory management and CPU interaction</li>
+                <li>Drivers, filesystems, and hardware interrupts</li>
+                <li>Processes, scheduling, and system calls</li>
+            </ul>
+            <p class="muted small">
+                <i class="fas fa-rocket"></i> Phase 3 is planned for the future.
+            </p>
 
             <!-- Development Philosophy -->
             <h2>Development Philosophy</h2>
@@ -750,7 +832,7 @@
                 <span class="arrow">↓</span><br>
                 Replace<br>
                 <span class="arrow">↓</span><br>
-                <span style="color:#7ee2a8;">Build for real hardware</span>
+                <span class="green">Build for real hardware</span>
             </div>
 
             <!-- Status -->
@@ -759,7 +841,7 @@
                 <span class="chip built"><i class="fas fa-check"></i> Phase 1 — Simulator: COMPLETE</span>
             </p>
             <p>
-                The simulator currently provides a functional virtual desktop, application environment, virtual filesystem, storage system, terminal, window manager, and multiple system applications. The project is still under active development, but the first major milestone has been reached.
+                The simulator currently provides a functional virtual desktop, application environment, virtual filesystem, storage system, terminal, window manager, and multiple system applications. The project is still under active development, with Phase 2 now in progress.
             </p>
 
             <!-- Tech Stack -->

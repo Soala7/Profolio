@@ -1,34 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Soala Amachree — Mechatronics Engineering student building software, operating systems, AI, robotics, electronics, and mechanical systems.">
+  <meta name="author" content="Soala Amachree">
+  <title>Soala Amachree — Mechatronics & Systems</title>
 
-  <title>Soala Amachree · Mechatronics & Software</title>
-
-  <meta
-    name="description"
-    content="Portfolio of Soala Amachree — Mechatronics Engineering student exploring software, 3D modeling, systems, AI, robotics and hardware."
-  />
-
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
-    rel="stylesheet"
-  />
-
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-  />
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
   <style>
+    :root {
+      --bg: #f7f6f2;
+      --surface: #ffffff;
+      --surface-soft: #f1f0eb;
+      --text: #1f1f1d;
+      --text-soft: #6b6a65;
+      --text-muted: #92908a;
+      --border: #e4e2dc;
+      --border-dark: #d3d0c8;
+      --accent: #d97745;
+      --accent-dark: #b95c2e;
+      --accent-soft: #f5e5db;
+      --green: #4d7c5b;
+      --green-soft: #e5eee7;
+      --blue: #536b8c;
+      --blue-soft: #e8edf4;
+      --purple: #75658e;
+      --purple-soft: #ece8f2;
+      --radius: 18px;
+      --radius-small: 11px;
+      --shadow: 0 1px 2px rgba(0,0,0,.03), 0 8px 30px rgba(0,0,0,.035);
+      --max-width: 1180px;
+    }
+
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
     }
 
     html {
@@ -36,108 +51,774 @@
     }
 
     body {
-      background: #090c11;
-      color: #dce5f0;
-      font-family: "Inter", sans-serif;
-      line-height: 1.6;
-      padding: 24px 16px;
-    }
-
-    body::selection {
-      background: #31465d;
-      color: white;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "DM Sans", sans-serif;
+      line-height: 1.65;
     }
 
     a {
-      color: #86b7f2;
+      color: inherit;
       text-decoration: none;
     }
 
-    a:hover {
-      color: #b8d5ff;
-    }
-
-    button,
-    input {
+    button {
       font: inherit;
+      cursor: pointer;
+      background: none;
+      border: none;
     }
 
-    .container {
-      max-width: 1250px;
+    ::selection {
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+    }
+
+    /* --------------------------------------------------
+       NAVIGATION
+    -------------------------------------------------- */
+
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      padding: 16px 20px;
+      pointer-events: none;
+    }
+
+    nav {
+      max-width: 900px;
       margin: auto;
       display: flex;
-      flex-direction: column;
-      gap: 28px;
-    }
-
-    .mono {
-      font-family: "JetBrains Mono", monospace;
-    }
-
-    .muted {
-      color: #8492a6;
-    }
-
-    .small {
-      font-size: 0.82rem;
-    }
-
-    .card {
-      background: #0e141c;
-      border: 1px solid #202a37;
-      border-radius: 16px;
-      padding: 22px;
-      transition: 0.2s ease;
-    }
-
-    .card:hover {
-      border-color: #344356;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
-
-    .flex {
-      display: flex;
       align-items: center;
-      gap: 12px;
-    }
-
-    .wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    /* HEADER */
-
-    header {
-      display: flex;
       justify-content: space-between;
-      align-items: center;
-      gap: 20px;
+      padding: 10px 12px 10px 18px;
+      background: rgba(255,255,255,.82);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(220,218,211,.9);
+      border-radius: 999px;
+      box-shadow: 0 5px 25px rgba(0,0,0,.045);
+      pointer-events: auto;
     }
 
-    .name {
-      font-size: 2.4rem;
-      letter-spacing: -0.04em;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-weight: 700;
+      letter-spacing: -.02em;
+    }
+
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--text);
+      color: white;
+      font-size: 12px;
       font-weight: 700;
     }
 
-    .subtitle {
-      color: #93a7bd;
+    .nav-links {
+      display: flex;
+      gap: 4px;
+    }
+
+    .nav-links a {
+      padding: 7px 12px;
+      color: var(--text-soft);
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 999px;
+      transition: background .2s ease, color .2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+      background: var(--surface-soft);
+    }
+
+    /* --------------------------------------------------
+       GENERAL
+    -------------------------------------------------- */
+
+    .container {
+      width: min(var(--max-width), calc(100% - 40px));
+      margin: auto;
+    }
+
+    section {
+      padding: 110px 0;
+    }
+
+    .section-header {
+      max-width: 720px;
+      margin-bottom: 48px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      color: var(--accent-dark);
       font-family: "JetBrains Mono", monospace;
-      font-size: 0.95rem;
-      margin-top: 3px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 20px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    h1, h2, h3 {
+      letter-spacing: -.035em;
+      line-height: 1.1;
+    }
+
+    h2 {
+      font-size: clamp(34px, 5vw, 52px);
+      margin-bottom: 18px;
+    }
+
+    .section-description {
+      color: var(--text-soft);
+      font-size: 17px;
+      max-width: 650px;
+    }
+
+    /* --------------------------------------------------
+       HERO
+    -------------------------------------------------- */
+
+    .hero {
+      min-height: calc(100vh - 80px);
+      display: flex;
+      align-items: center;
+      padding: 100px 0 120px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 70px;
+      align-items: center;
+    }
+
+    .hero h1 {
+      max-width: 800px;
+      font-size: clamp(50px, 7vw, 88px);
+      font-weight: 700;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+    }
+
+    .hero-description {
+      max-width: 650px;
+      margin-top: 28px;
+      color: var(--text-soft);
+      font-size: clamp(17px, 2vw, 20px);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 12px 17px;
+      border: 1px solid var(--border-dark);
+      border-radius: 999px;
+      background: var(--surface);
+      font-size: 14px;
+      font-weight: 600;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      border-color: var(--text);
+    }
+
+    .button.primary {
+      background: var(--text);
+      color: white;
+      border-color: var(--text);
+    }
+
+    .hero-system {
+      padding: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .system-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .architecture {
+      display: grid;
+      gap: 8px;
+    }
+
+    .architecture-row {
+      padding: 13px 15px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface-soft);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+    }
+
+    .architecture-row.highlight {
+      background: var(--accent-soft);
+      border-color: #e7cbbb;
+    }
+
+    .architecture-row strong {
+      color: var(--accent-dark);
+    }
+
+    /* --------------------------------------------------
+       PROJECTS
+    -------------------------------------------------- */
+
+    .projects {
+      background: #efeee9;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .project-card {
+      position: relative;
+      padding: 27px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 1px 2px rgba(0,0,0,.02);
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--border-dark);
+      box-shadow: 0 15px 40px rgba(0,0,0,.06);
+    }
+
+    .project-card.featured {
+      grid-column: span 2;
+      background: #20201e;
+      color: white;
+      border-color: #20201e;
+    }
+
+    .project-card.featured .project-description {
+      color: #b7b6b0;
+    }
+
+    .project-card.featured .project-meta {
+      color: #a9a8a2;
+    }
+
+    .project-number {
+      margin-bottom: 22px;
+      color: var(--text-muted);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+    }
+
+    .featured .project-number {
+      color: #999791;
+    }
+
+    .project-title {
+      font-size: 27px;
+      margin-bottom: 11px;
+    }
+
+    .project-description {
+      color: var(--text-soft);
+      font-size: 15px;
+      max-width: 650px;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 23px;
+    }
+
+    .tag {
+      display: inline-flex;
+      padding: 5px 9px;
+      border-radius: 7px;
+      background: var(--surface-soft);
+      color: var(--text-soft);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px;
+    }
+
+    .featured .tag {
+      background: #30302d;
+      color: #c6c5bf;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 26px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      transition: color .2s ease;
+    }
+
+    .project-link:hover {
+      color: var(--accent-dark);
+    }
+
+    .featured .project-link {
+      color: #e3a17d;
+    }
+
+    .featured .project-link:hover {
+      color: #f0c4a8;
+    }
+
+    /* --------------------------------------------------
+       TECHNOLOGY SYSTEM
+    -------------------------------------------------- */
+
+    .technology-section {
+      background: var(--surface);
+    }
+
+    .tech-category {
+      margin-bottom: 60px;
+    }
+
+    .tech-category:last-child {
+      margin-bottom: 0;
+    }
+
+    .category-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .category-heading h3 {
+      font-size: 22px;
+    }
+
+    .category-heading span {
+      color: var(--text-muted);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .tech-card {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      min-height: 76px;
+      padding: 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      transition: transform .25s ease, border-color .25s ease, background .25s ease;
+    }
+
+    .tech-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--border-dark);
+      background: white;
+    }
+
+    .tech-icon {
+      width: 39px;
+      height: 39px;
+      flex: 0 0 39px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: white;
+      border: 1px solid var(--border);
+    }
+
+    .tech-icon img {
+      width: 25px;
+      height: 25px;
+      object-fit: contain;
+    }
+
+    .tech-icon i {
+      font-size: 20px;
+      color: var(--text-soft);
+    }
+
+    .tech-info strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .tech-info span {
+      display: block;
+      margin-top: 2px;
+      color: var(--text-muted);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 9px;
+    }
+
+    .learning .tech-card {
+      background: #f5f3ed;
+    }
+
+    .learning .tech-icon {
+      background: #fffaf5;
+    }
+
+    .explored .tech-card {
+      opacity: .85;
+    }
+
+    /* --------------------------------------------------
+       MECHATRONICS
+    -------------------------------------------------- */
+
+    .mechatronics {
+      background: #20201e;
+      color: white;
+    }
+
+    .mechatronics .eyebrow {
+      color: #e3a17d;
+    }
+
+    .mechatronics .section-description {
+      color: #b6b5af;
+    }
+
+    .mechatronics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .mecha-card {
+      padding: 25px;
+      border: 1px solid #373734;
+      border-radius: var(--radius);
+      background: #282825;
+      transition: transform .25s ease, border-color .25s ease;
+    }
+
+    .mecha-card:hover {
+      transform: translateY(-4px);
+      border-color: #55534d;
+    }
+
+    .mecha-icon {
+      width: 45px;
+      height: 45px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 22px;
+      border-radius: 12px;
+      background: #343430;
+      color: #e3a17d;
+      font-size: 18px;
+    }
+
+    .mecha-card h3 {
+      margin-bottom: 9px;
+      font-size: 20px;
+    }
+
+    .mecha-card p {
+      color: #aaa9a2;
+      font-size: 14px;
+    }
+
+    .mecha-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 20px;
+    }
+
+    .mecha-tech span {
+      padding: 5px 8px;
+      border: 1px solid #41413c;
+      border-radius: 6px;
+      color: #c4c3bc;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 9px;
+    }
+
+    /* --------------------------------------------------
+       SYSTEMS
+    -------------------------------------------------- */
+
+    .systems {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .system-map {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .system-node {
+      padding: 25px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      cursor: pointer;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
+      text-align: left;
+    }
+
+    .system-node:hover,
+    .system-node.active {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .node-index {
+      color: var(--text-muted);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px;
+    }
+
+    .system-node h3 {
+      margin-top: 13px;
+      margin-bottom: 7px;
+      font-size: 17px;
+    }
+
+    .system-node p {
+      color: var(--text-soft);
+      font-size: 12px;
+    }
+
+    .system-description {
+      min-height: 90px;
+      max-width: 700px;
+      margin: 25px auto 0;
+      padding: 22px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      color: var(--text-soft);
+      font-size: 14px;
+      transition: opacity 0.3s ease;
+    }
+
+    /* --------------------------------------------------
+       LEARNING MAP
+    -------------------------------------------------- */
+
+    .learning-map {
+      background: #efeee9;
+      border-top: 1px solid var(--border);
+    }
+
+    .learning-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .learning-card {
+      padding: 25px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .learning-card .icon {
+      margin-bottom: 25px;
+      color: var(--accent);
+      font-size: 20px;
+    }
+
+    .learning-card h3 {
+      margin-bottom: 8px;
+      font-size: 20px;
+    }
+
+    .learning-card p {
+      color: var(--text-soft);
+      font-size: 14px;
+    }
+
+    .learning-progress {
+      height: 4px;
+      margin-top: 22px;
+      overflow: hidden;
+      border-radius: 10px;
+      background: var(--surface-soft);
+    }
+
+    .learning-progress span {
+      display: block;
+      height: 100%;
+      width: var(--progress);
+      background: var(--accent);
+      border-radius: inherit;
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: transform 1.2s cubic-bezier(.22,1,.36,1);
+    }
+
+    .revealed .learning-progress span {
+      transform: scaleX(1);
+    }
+
+    /* --------------------------------------------------
+       TERMINAL
+    -------------------------------------------------- */
+
+    .terminal-section {
+      padding-bottom: 130px;
+    }
+
+    .terminal {
+      overflow: hidden;
+      max-width: 850px;
+      margin: auto;
+      background: #20201e;
+      border: 1px solid #30302d;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.08);
+    }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 13px 17px;
+      border-bottom: 1px solid #343430;
+      color: #8f8e88;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+    }
+
+    .terminal-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #55534e;
+    }
+
+    .terminal-body {
+      min-height: 200px;
+      padding: 24px;
+      color: #d1d0ca;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .terminal-line {
+      display: flex;
+      gap: 8px;
+    }
+
+    .terminal-prompt {
+      color: #d58b64;
+    }
+
+    .terminal-input {
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px;
+      background: #292925;
+      border: 1px solid #3a3934;
+      border-radius: 8px;
+      color: #eee;
+      font-family: inherit;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .terminal-input:focus {
+      border-color: #706d65;
+    }
+
+    /* --------------------------------------------------
+       FOOTER
+    -------------------------------------------------- */
+
+    footer {
+      padding: 35px 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
     }
 
     .socials {
@@ -146,491 +827,108 @@
     }
 
     .socials a {
-      width: 42px;
-      height: 42px;
-      display: grid;
-      place-items: center;
-      border: 1px solid #293442;
-      border-radius: 10px;
-      color: #a9b8ca;
-      transition: 0.2s;
+      transition: color .2s ease;
     }
 
     .socials a:hover {
-      color: white;
-      border-color: #58718f;
-      transform: translateY(-2px);
+      color: var(--text);
     }
 
-    /* HERO */
+    /* --------------------------------------------------
+       SCROLL REVEAL
+    -------------------------------------------------- */
 
-    .hero {
-      border-left: 4px solid #456e93;
-      background:
-        radial-gradient(
-          circle at 90% 10%,
-          rgba(60, 100, 140, 0.1),
-          transparent 30%
-        ),
-        #0e141c;
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .8s ease, transform .8s cubic-bezier(.22,1,.36,1);
     }
 
-    .hero-text {
-      max-width: 800px;
-      color: #b6c4d4;
-      font-size: 1rem;
+    .reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    .status {
-      margin-top: 15px;
-    }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #151d27;
-      border: 1px solid #2a3747;
-      color: #b9c7d7;
-      padding: 5px 11px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-    }
-
-    /* SKILL LEVELS */
-    .built {
-      background: rgba(34, 197, 94, 0.12);
-      border-color: rgba(34, 197, 94, 0.4);
-      color: #7ee2a8;
-    }
-
-    .used {
-      background: rgba(59, 130, 246, 0.12);
-      border-color: rgba(59, 130, 246, 0.4);
-      color: #8db9ff;
-    }
-
-    .learning {
-      background: rgba(245, 158, 11, 0.12);
-      border-color: rgba(245, 158, 11, 0.4);
-      color: #f5c76b;
-    }
-
-    .studied {
-      background: rgba(168, 85, 247, 0.12);
-      border-color: rgba(168, 85, 247, 0.4);
-      color: #c7a1f7;
-    }
-
-    /* SECTION */
-
-    section > h2 {
-      font-size: 1.35rem;
-      border-bottom: 1px solid #202a37;
-      padding-bottom: 9px;
-      margin-bottom: 15px;
-    }
-
-    /* SKILL LEGEND */
-
-    .skill-legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 15px;
-    }
-
-    .legend-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: currentColor;
-    }
-
-    /* PROJECT FILTERS */
-
-    .filters {
-      margin-bottom: 15px;
-    }
-
-    .filter-btn {
-      background: #121a24;
-      border: 1px solid #283442;
-      color: #9eafc3;
-      border-radius: 999px;
-      padding: 7px 15px;
-      cursor: pointer;
-      font-size: 0.78rem;
-    }
-
-    .filter-btn:hover,
-    .filter-btn.active {
-      background: #26384c;
-      border-color: #506a86;
-      color: white;
-    }
-
-    /* PROJECT */
-
-    .project {
-      cursor: pointer;
-    }
-
-    .project-title {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 7px;
-    }
-
-    .project-title strong {
-      font-size: 1rem;
-    }
-
-    .project-description {
-      color: #9eafc1;
-      font-size: 0.87rem;
-    }
-
-    .project-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .project-actions .action-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.75rem;
-      color: #86b7f2;
-      padding: 4px 12px;
-      border: 1px solid #2a3747;
-      border-radius: 999px;
-      transition: 0.15s;
-    }
-
-    .project-actions .action-link:hover {
-      background: #1a2636;
-      border-color: #4a6a8a;
-      color: #b8d5ff;
-    }
-
-    /* TECHNOLOGY */
-
-    .tech-card {
-      cursor: default;
-    }
-
-    .tech-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .tech-evidence {
-      margin-top: 7px;
-      color: #899aaf;
-      font-size: 0.78rem;
-    }
-
-    /* SYSTEMS */
-
-    .system-diagram {
-      background: #080d13;
-      border: 1px solid #1e2936;
-      border-radius: 15px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .system-node {
-      min-width: 180px;
-      text-align: center;
-      background: #17212d;
-      border: 1px solid #304254;
-      border-radius: 999px;
-      padding: 8px 20px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .system-node:hover {
-      background: #223142;
-      border-color: #55718e;
-      transform: scale(1.03);
-    }
-
-    .arrow {
-      color: #56687c;
-      margin: 3px 0;
-    }
-
-    .system-info {
-      margin-top: 15px;
-      background: #0a1017;
-      border: 1px solid #202b38;
-      padding: 13px;
-      border-radius: 10px;
-      color: #9fb0c2;
-    }
-
-    /* LEARNING MAP */
-
-    .learning-map {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-    }
-
-    .learning-box {
-      background: #0b1118;
-      border: 1px solid #202c39;
-      border-radius: 12px;
-      padding: 16px;
-    }
-
-    .learning-box h3 {
-      font-family: "JetBrains Mono", monospace;
-      font-size: 0.85rem;
-      color: #9eb8d2;
-      margin-bottom: 10px;
-    }
-
-    .learning-box div {
-      font-size: 0.82rem;
-      color: #8798aa;
-      line-height: 1.9;
-    }
-
-    /* IMAGES */
-
-    .image-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
-
-    .image-card {
-      overflow: hidden;
-      border-radius: 13px;
-      border: 1px solid #263240;
-      background: #090d13;
-      cursor: pointer;
-    }
-
-    .image-card img {
-      display: block;
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      transition: transform 0.3s;
-    }
-
-    .image-card:hover img {
-      transform: scale(1.03);
-    }
-
-    .image-caption {
-      padding: 10px 12px;
-      font-size: 0.78rem;
-      color: #9aabba;
-    }
-
-    .image-error {
-      height: 220px;
-      display: grid;
-      place-items: center;
-      color: #687789;
-      background: #0b1017;
-      font-family: "JetBrains Mono", monospace;
-      font-size: 0.75rem;
-    }
-
-    /* EDUCATION */
-
-    .education-card h3 {
-      margin-bottom: 13px;
-    }
-
-    .grades {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 7px;
-    }
-
-    .grade {
-      background: #111923;
-      border-left: 3px solid #496581;
-      padding: 7px 9px;
-      font-size: 0.8rem;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .grade strong {
-      color: #b8d1eb;
-    }
-
-    /* TERMINAL */
-
-    .terminal {
-      background: #070a0f;
-      border: 1px solid #222d39;
-      border-radius: 13px;
-      overflow: hidden;
-    }
-
-    .terminal-bar {
-      padding: 9px 13px;
-      background: #111821;
-      border-bottom: 1px solid #222d39;
-      color: #687789;
-      font-size: 0.75rem;
-    }
-
-    #terminalOutput {
-      padding: 15px;
-      min-height: 180px;
-      max-height: 300px;
-      overflow-y: auto;
-      font-family: "JetBrains Mono", monospace;
-      font-size: 0.8rem;
-    }
-
-    .terminal-line {
-      margin-bottom: 7px;
-      color: #a9b9c9;
-    }
-
-    .terminal-highlight {
-      color: #d9bd72;
-    }
-
-    .terminal-input {
-      display: flex;
-      padding: 11px 15px;
-      border-top: 1px solid #222d39;
-      font-family: "JetBrains Mono", monospace;
-    }
-
-    .terminal-input span {
-      color: #70a47d;
-      margin-right: 8px;
-    }
-
-    .terminal-input input {
-      flex: 1;
-      border: none;
-      outline: none;
-      background: transparent;
-      color: #dce5f0;
-      font-family: inherit;
-    }
-
-    /* FOOTER */
-
-    footer {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 15px;
-      color: #8392a4;
-      font-size: 0.8rem;
-    }
-
-    /* MODAL */
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.82);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      z-index: 1000;
-    }
-
-    .modal.open {
-      display: flex;
-    }
-
-    .modal-content {
-      position: relative;
-      width: min(1000px, 95vw);
-      max-height: 94vh;
-      overflow: auto;
-      background: #0d131b;
-      border: 1px solid #344252;
-      border-radius: 16px;
-      padding: 18px;
-    }
-
-    .modal-close {
-      position: absolute;
-      right: 15px;
-      top: 10px;
-      border: none;
-      background: #121b25;
-      color: white;
-      width: 35px;
-      height: 35px;
-      border-radius: 50%;
-      cursor: pointer;
-      z-index: 2;
-    }
-
-    .modal-content img {
-      width: 100%;
-      max-height: 80vh;
-      object-fit: contain;
-      display: block;
-      margin-top: 15px;
-      border-radius: 8px;
-    }
-
-    /* RESPONSIVE */
+    .reveal-delay-1 { transition-delay: .08s; }
+    .reveal-delay-2 { transition-delay: .16s; }
+    .reveal-delay-3 { transition-delay: .24s; }
+
+    /* --------------------------------------------------
+       RESPONSIVE
+    -------------------------------------------------- */
 
     @media (max-width: 900px) {
-      .grid-3,
-      .learning-map,
-      .image-grid {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .tech-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .mechatronics-grid,
+      .learning-grid {
+        grid-template-columns: 1fr;
+      }
+      .system-map {
         grid-template-columns: repeat(2, 1fr);
       }
     }
 
     @media (max-width: 700px) {
-      body {
-        padding: 15px 10px;
+      section {
+        padding: 80px 0;
       }
-
-      header {
-        align-items: flex-start;
+      .container {
+        width: min(100% - 28px, var(--max-width));
+      }
+      .nav-wrapper {
+        padding: 10px;
+      }
+      nav {
+        padding: 9px 12px;
+      }
+      .nav-links {
+        display: none;
+      }
+      .hero {
+        min-height: auto;
+        padding: 75px 0 90px;
+      }
+      .hero h1 {
+        font-size: clamp(43px, 14vw, 67px);
+      }
+      .project-grid {
+        grid-template-columns: 1fr;
+      }
+      .project-card.featured {
+        grid-column: span 1;
+      }
+      .tech-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .system-map {
+        grid-template-columns: 1fr;
+      }
+      .footer-inner {
         flex-direction: column;
+        align-items: flex-start;
       }
+    }
 
-      .name {
-        font-size: 1.9rem;
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
       }
-
-      .grid-2,
-      .grid-3,
-      .learning-map,
-      .image-grid {
-        grid-template-columns: 1fr;
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
       }
-
-      .grades {
-        grid-template-columns: 1fr;
-      }
-
-      .system-node {
-        min-width: 150px;
+      .reveal {
+        opacity: 1;
+        transform: none;
       }
     }
   </style>
@@ -638,1182 +936,594 @@
 
 <body>
 
-<div class="container">
+  <!-- ==================================================
+       NAVIGATION
+  ================================================== -->
 
-  <!-- HEADER -->
-  <header>
-
-    <div>
-      <div class="name">Soala Amachree</div>
-
-      <div class="subtitle">
-        Mechatronics Engineering · Software · Systems
-      </div>
-
-      <div class="muted small" style="margin-top: 5px;">
-        Software, electronics, AI, robotics and learning how computers work underneath.
-      </div>
-    </div>
-
-    <div class="socials">
-
-      <a
-        href="https://github.com/Soala7"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="GitHub"
-      >
-        <i class="fab fa-github"></i>
+  <div class="nav-wrapper">
+    <nav aria-label="Main navigation">
+      <a href="#top" class="brand">
+        <span class="brand-mark">SA</span>
+        <span>Soala Amachree</span>
       </a>
-
-      <a
-        href="https://x.com/Soala7VA"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="X"
-      >
-        <i class="fab fa-x-twitter"></i>
-      </a>
-
-      <a
-        href="https://www.linkedin.com/in/soala-amachree"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="LinkedIn"
-      >
-        <i class="fab fa-linkedin"></i>
-      </a>
-
-      <a
-        href="https://www.tiktok.com/@thecodegambit"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="TikTok"
-      >
-        <i class="fab fa-tiktok"></i>
-      </a>
-
-      <a
-        href="https://youtube.com/@sk7r-by"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="YouTube"
-      >
-        <i class="fab fa-youtube"></i>
-      </a>
-
-    </div>
-
-  </header>
-
-
-  <!-- HERO -->
-
-  <section class="card hero">
-
-    <div class="hero-text">
-      I build software, experiment with systems programming, explore AI,
-      and work with electronics and mechanical design as part of my
-      Mechatronics Engineering path.
-    </div>
-
-    <div class="wrap status">
-
-      <span class="chip built">Python</span>
-      <span class="chip used">C</span>
-      <span class="chip used">C++</span>
-      <span class="chip used">JavaScript</span>
-      <span class="chip used">HTML/CSS</span>
-      <span class="chip used">Git/GitHub</span>
-      <span class="chip used">Linux</span>
-
-      <span class="chip learning">Rust</span>
-      <span class="chip learning">x86-64 Assembly</span>
-      <span class="chip learning">Blender</span>
-      <span class="chip learning">Robotics</span>
-
-    </div>
-
-  </section>
-
-
-  <!-- PROJECTS -->
-
-  <section id="projects">
-
-    <h2>
-      <i class="fas fa-code-branch"></i>
-      Projects & experiments
-    </h2>
-
-    <div class="wrap filters" id="filters">
-
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="software">Software</button>
-      <button class="filter-btn" data-filter="systems">Systems</button>
-      <button class="filter-btn" data-filter="ai">AI</button>
-      <button class="filter-btn" data-filter="web">Web</button>
-      <button class="filter-btn" data-filter="hardware">Hardware</button>
-
-    </div>
-
-    <div class="grid-2" id="projectList"></div>
-
-  </section>
-
-
-  <!-- SYSTEMS LAB -->
-
-  <section id="systems" class="card">
-
-    <h2>
-      <i class="fas fa-layer-group"></i>
-      Systems lab
-    </h2>
-
-    <div class="system-diagram">
-
-      <div class="system-node" data-system="firmware">
-        Firmware
+      <div class="nav-links">
+        <a href="#work">Work</a>
+        <a href="#stack">Stack</a>
+        <a href="#mechatronics">Mechatronics</a>
+        <a href="#systems">Systems</a>
       </div>
-
-      <div class="arrow">↓</div>
-
-      <div class="system-node" data-system="bootloader">
-        Bootloader
-      </div>
-
-      <div class="arrow">↓</div>
-
-      <div class="system-node" data-system="kernel">
-        Kernel
-      </div>
-
-      <div class="arrow">↓</div>
-
-      <div class="system-node" data-system="drivers">
-        Drivers
-      </div>
-
-      <div class="arrow">↓</div>
-
-      <div class="system-node" data-system="userspace">
-        Userspace
-      </div>
-
-      <div class="arrow">↓</div>
-
-      <div class="system-node" data-system="applications">
-        Applications
-      </div>
-
-    </div>
-
-    <div class="system-info" id="systemInfo">
-      Click a layer to explore what it does.
-    </div>
-
-  </section>
-
-
-  <!-- TECHNOLOGIES -->
-
-  <section>
-
-    <h2>
-      <i class="fas fa-toolbox"></i>
-      Languages & tools
-    </h2>
-
-    <div class="skill-legend">
-      <span class="chip built">
-        <span class="legend-dot"></span>
-        Strong
-      </span>
-      <span class="chip used">
-        <span class="legend-dot"></span>
-        Used
-      </span>
-      <span class="chip learning">
-        <span class="legend-dot"></span>
-        Learning
-      </span>
-      <span class="chip studied">
-        <span class="legend-dot"></span>
-        Explored
-      </span>
-    </div>
-
-    <div class="grid-3" id="techGrid"></div>
-
-  </section>
-
-
-  <!-- LEARNING MAP -->
-
-  <section class="card">
-
-    <h2>
-      <i class="fas fa-map"></i>
-      Current learning map
-    </h2>
-
-    <div class="learning-map">
-
-      <div class="learning-box">
-        <h3>SOFTWARE</h3>
-
-        <div>
-          → Python<br>
-          → C / C++<br>
-          → JavaScript<br>
-          → Rust<br>
-          → Assembly<br>
-          → Algorithms
-        </div>
-      </div>
-
-      <div class="learning-box">
-        <h3>SYSTEMS</h3>
-
-        <div>
-          → Operating systems<br>
-          → Kernel development<br>
-          → Virtual memory<br>
-          → Filesystems<br>
-          → QEMU / KVM<br>
-          → Linux
-        </div>
-      </div>
-
-      <div class="learning-box">
-        <h3>AI</h3>
-
-        <div>
-          → Machine learning<br>
-          → Deep Q-Learning<br>
-          → PyTorch<br>
-          → OpenCV<br>
-          → Computer vision<br>
-          → Reinforcement learning
-        </div>
-      </div>
-
-      <div class="learning-box">
-        <h3>HARDWARE</h3>
-
-        <div>
-          → Arduino<br>
-          → Electronics<br>
-          → KiCad<br>
-          → PCB design<br>
-          → CAD<br>
-          → Robotics
-        </div>
-      </div>
-
-    </div>
-
-  </section>
-
-  <!-- EDUCATION -->
-
-  <section>
-
-    <h2>
-      <i class="fas fa-graduation-cap"></i>
-      Education & credentials
-    </h2>
-
-    <div class="grid-2">
-
-      <div class="card education-card">
-
-        <h3>WASSCE 2026</h3>
-
-        <div class="grades">
-
-          <div class="grade">
-            <span>Further Mathematics</span>
-            <strong>A1</strong>
-          </div>
-
-          <div class="grade">
-            <span>Mathematics</span>
-            <strong>A1</strong>
-          </div>
-
-          <div class="grade">
-            <span>Chemistry</span>
-            <strong>A1</strong>
-          </div>
-
-          <div class="grade">
-            <span>Digital Technologies</span>
-            <strong>A1</strong>
-          </div>
-
-          <div class="grade">
-            <span>Geography</span>
-            <strong>A1</strong>
-          </div>
-
-          <div class="grade">
-            <span>Civic Education</span>
-            <strong>A1</strong>
-          </div>
-
-          <div class="grade">
-            <span>English Language</span>
-            <strong>B2</strong>
-          </div>
-
-          <div class="grade">
-            <span>Physics</span>
-            <strong>B3</strong>
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="card">
-
-        <h3>UTME 2026</h3>
-
-        <div class="wrap">
-
-          <span class="chip">Physics · 89</span>
-          <span class="chip">Chemistry · 87</span>
-          <span class="chip">Mathematics · 75</span>
-          <span class="chip">English · 57</span>
-
-        </div>
-
-        <div style="margin-top:12px;">
-          <strong>Aggregate: 308</strong>
-        </div>
-
-        <hr style="border:0;border-top:1px solid #222d39;margin:18px 0;">
-
-        <h3>CS50P</h3>
-
-        <div class="muted small">
-          Harvard University's Introduction to Programming with Python.
-        </div>
-
-        <div class="muted small" style="margin-top:5px;">
-          Completed in 2026 · 9 problem sets + final project.
-        </div>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- TERMINAL -->
-
-  <section class="card">
-
-    <h2>
-      <i class="fas fa-terminal"></i>
-      Portfolio terminal
-    </h2>
-
-    <div class="terminal">
-
-      <div class="terminal-bar">
-        soala@portfolio — bash
-      </div>
-
-      <div id="terminalOutput">
-
-        <div class="terminal-line">
-          Type <span class="terminal-highlight">help</span>
-          to see available commands.
-        </div>
-
-      </div>
-
-      <div class="terminal-input">
-
-        <span>$</span>
-
-        <input
-          id="terminalInput"
-          type="text"
-          autocomplete="off"
-          placeholder="type a command..."
-        >
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- FOOTER -->
-
-  <footer class="card">
-
-    <div>
-      <i class="fab fa-github"></i>
-      <a
-        href="https://github.com/Soala7"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        github.com/Soala7
-      </a>
-    </div>
-
-    <div>
-      <i class="fab fa-linkedin"></i>
-      <a
-        href="https://www.linkedin.com/in/soala-amachree"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        LinkedIn
-      </a>
-    </div>
-
-    <div>
-      <i class="fab fa-x-twitter"></i>
-      <a
-        href="https://x.com/Soala7VA"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        @Soala7VA
-      </a>
-    </div>
-
-    <div class="muted">
-      Static HTML · CSS · JavaScript
-    </div>
-
-  </footer>
-
-</div>
-
-
-<!-- IMAGE MODAL -->
-
-<div class="modal" id="imageModal">
-
-  <div class="modal-content">
-
-    <button
-      class="modal-close"
-      onclick="closeModal()"
-      aria-label="Close image"
-    >
-    </button>
-
-    <h3 id="modalTitle"></h3>
-
-    <img id="modalImage" src="" alt="">
-
+    </nav>
   </div>
 
-</div>
+  <main id="top">
 
+    <!-- ==================================================
+         HERO
+    ================================================== -->
 
-<script>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="reveal">
+            <div class="eyebrow">Mechatronics × Systems</div>
+            <h1>Building at the <span>boundary</span> of hardware and software.</h1>
+            <p class="hero-description">
+              I'm Soala Amachree, a Mechatronics Engineering student interested in systems programming,
+              operating systems, artificial intelligence, robotics, electronics, and mechanical design.
+            </p>
+            <div class="hero-actions">
+              <a href="#work" class="button primary">
+                Explore my work <i class="fa-solid fa-arrow-down"></i>
+              </a>
+              <a href="https://github.com/Soala7" target="_blank" rel="noopener noreferrer" class="button">
+                <i class="fa-brands fa-github"></i> GitHub
+              </a>
+            </div>
+          </div>
 
-/* =========================================================
-   TECHNOLOGIES (with honest statuses)
-========================================================= */
-
-const siteBasePath = (() => {
-  const path = window.location.pathname;
-  const repoPrefix = "/Profolio/";
-
-  if (path.includes(repoPrefix)) {
-    return repoPrefix;
-  }
-
-  return "/";
-})();
-
-const resolveProjectPath = (path) => {
-  if (!path || path.startsWith("http") || path.startsWith("mailto:")) {
-    return path;
-  }
-
-  if (path.startsWith("/")) {
-    return path;
-  }
-
-  return `${siteBasePath}${path.replace(/^\.\//, "")}`;
-};
-
-const technologies = [
-  {
-    name: "Python",
-    status: "built",
-    evidence: "CS50P, Snake AI, VirtualOS, games, web and automation."
-  },
-  {
-    name: "C",
-    status: "used",
-    evidence: "CHIP-8 emulator, Unix shell and low-level OS/kernel work."
-  },
-  {
-    name: "C++",
-    status: "used",
-    evidence: "Systems programming, SDL2 and emulator/low-level experiments."
-  },
-  {
-    name: "JavaScript",
-    status: "used",
-    evidence: "Interactive websites and frontend development."
-  },
-  {
-    name: "HTML / CSS",
-    status: "used",
-    evidence: "Multiple websites and interactive interfaces."
-  },
-  {
-    name: "Git / GitHub",
-    status: "built",
-    evidence: "Used across personal projects and public source-code repositories."
-  },
-  {
-    name: "Linux / Bash",
-    status: "used",
-    evidence: "Development environment, command-line workflows and systems work."
-  },
-  {
-    name: "GCC / GDB",
-    status: "used",
-    evidence: "C/C++ compilation, debugging and low-level development."
-  },
-  {
-    name: "QEMU / KVM",
-    status: "used",
-    evidence: "Virtual-machine testing for operating-system development."
-  },
-  {
-    name: "NASM",
-    status: "used",
-    evidence: "x86 Assembly and bootloader/kernel experiments."
-  },
-  {
-    name: "Docker",
-    status: "used",
-    evidence: "Development environments and OS development workflow."
-  },
-  {
-    name: "PyTorch",
-    status: "used",
-    evidence: "Deep Q-Learning Snake AI."
-  },
-  {
-    name: "OpenCV",
-    status: "used",
-    evidence: "Computer vision and visualisation experiments."
-  },
-  {
-    name: "Flask / Django",
-    status: "used",
-    evidence: "Python web-development projects and experiments."
-  },
-  {
-    name: "Arduino",
-    status: "used",
-    evidence: "Electronics and embedded experiments."
-  },
-  {
-    name: "KiCad",
-    status: "used",
-    evidence: "PCB and circuit-design work."
-  },
-  {
-    name: "Fusion 360",
-    status: "used",
-    evidence: "Mechanical CAD and design work."
-  },
-  {
-    name: "Onshape",
-    status: "used",
-    evidence: "3D CAD modelling."
-  },
-  {
-    name: "Rust",
-    status: "learning",
-    evidence: "Currently exploring systems programming."
-  },
-  {
-    name: "x86-64 Assembly",
-    status: "learning",
-    evidence: "Currently developing low-level OS and bootloader knowledge."
-  },
-  {
-    name: "Blender",
-    status: "learning",
-    evidence: "Currently learning 3D modelling."
-  },
-  {
-    name: "TensorFlow",
-    status: "studied",
-    evidence: "Explored as part of machine-learning development."
-  },
-  {
-    name: "React",
-    status: "studied",
-    evidence: "Frontend framework explored through development experiments."
-  },
-  {
-    name: "Figma",
-    status: "studied",
-    evidence: "Used for interface and visual-design exploration."
-  }
-];
-
-
-/* =========================================================
-   PROJECTS (with real GitHub repo links and article links)
-========================================================= */
-
-const projects = [
-
-  {
-    title: "Gorgon-OS-Virtual-Simulator",
-    description:
-      "Phase 1 of a virtual operating system simulator built with Pygame — explores how a VM works, with a terminal and desktop environment.",
-    tags: ["systems", "software"],
-    date: "2025",
-    repo: "https://github.com/Soala7/Gorgon-OS-Virtual-Simulator",
-    article: "projects/gorgon.html"
-  },
-
-  {
-    title: "Snake-AI",
-    description:
-      "Deep Q-Learning agent trained to play Snake using PyTorch, Pygame and reinforcement learning.",
-    tags: ["ai", "software"],
-    date: "2025",
-    repo: "https://github.com/Soala7/Snake-AI",
-    article: "projects/snake-ai.html"
-  },
-
-  {
-    title: "Mini-Kernel",
-    description:
-      "A bootable OS kernel experiment using Docker, QEMU, Makefile and x86 Assembly — learning bootloader and kernel basics.",
-    tags: ["systems", "software"],
-    date: "2025",
-    repo: "https://github.com/Soala7/Mini-Kernel",
-    article: "projects/mini-kernel.html"
-  },
-
-  {
-    title: "Chip8-Emulator",
-    description:
-      "A CHIP-8 emulator written in C — handles CPU instructions, memory, display and input.",
-    tags: ["systems", "software"],
-    date: "2025",
-    repo: "https://github.com/Soala7/Chip8-Emulator",
-    article: "projects/chip8.html"
-  },
-
-  {
-    title: "c-unix-shell",
-    description:
-      "A custom Unix shell written in C — explores process management, command parsing and shell internals.",
-    tags: ["systems", "software"],
-    date: "2026",
-    repo: "https://github.com/Soala7/c-unix-shell",
-    article: "projects/unix-shell.html"
-  },
-
-  {
-    title: "Chess-game-2.0",
-    description:
-      "A chess game with AI and two-player modes — built with Python and Pygame.",
-    tags: ["software", "ai"],
-    date: "2025",
-    repo: "https://github.com/Soala7/Chess-game-2.0",
-    article: "projects/chess.html"
-  },
-
-  {
-    title: "Hello-language",
-    description:
-      "A multi-language 'Hello World' collection — contributions welcome.",
-    tags: ["software"],
-    date: "2025",
-    repo: "https://github.com/Soala7/Hello-language"
-  },
-
-  {
-    title: "Pygame",
-    description:
-      "A collection of Python mini-games built with Pygame — beginner-friendly and interactive.",
-    tags: ["software"],
-    date: "2025",
-    repo: "https://github.com/Soala7/Pygame"
-  }
-];
-
-
-/* =========================================================
-   RENDER TECHNOLOGIES
-========================================================= */
-
-function renderTechnologies() {
-
-  const grid = document.getElementById("techGrid");
-
-  grid.innerHTML = "";
-
-  technologies.forEach(tech => {
-
-    const card = document.createElement("div");
-
-    card.className = "card tech-card";
-
-    const statusClass =
-      tech.status === "built"
-        ? "built"
-        : tech.status === "used"
-        ? "used"
-        : tech.status === "learning"
-        ? "learning"
-        : "studied";
-
-    card.innerHTML = `
-      <div class="tech-header">
-
-        <strong>${tech.name}</strong>
-
-        <span class="chip ${statusClass}">
-          ${tech.status}
-        </span>
-
+          <div class="hero-system reveal reveal-delay-2">
+            <div class="system-top">
+              <span>current_stack.system</span>
+              <span class="status">
+                <span class="status-dot"></span> building
+              </span>
+            </div>
+            <div class="architecture">
+              <div class="architecture-row"><strong>HARDWARE</strong><br>Arduino · Sensors · Motors · Electronics</div>
+              <div class="architecture-row highlight"><strong>CONTROL</strong><br>Embedded C/C++ · Microcontrollers</div>
+              <div class="architecture-row"><strong>SYSTEMS</strong><br>C · Assembly · Linux · QEMU · Kernels</div>
+              <div class="architecture-row"><strong>INTELLIGENCE</strong><br>Python · PyTorch · Computer Vision · AI</div>
+              <div class="architecture-row"><strong>DESIGN</strong><br>CAD · 3D Modelling · Mechanical Systems</div>
+            </div>
+          </div>
+        </div>
       </div>
+    </section>
 
-      <div class="tech-evidence">
-        ${tech.evidence}
+    <!-- ==================================================
+         PROJECTS
+    ================================================== -->
+
+    <section id="work" class="projects">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">Selected work</div>
+          <h2>Things I've built.</h2>
+          <p class="section-description">
+            Projects are where I turn concepts into working systems — from neural networks and
+            emulators to kernels and virtual operating systems.
+          </p>
+        </div>
+
+        <div class="project-grid">
+          <!-- GORGON -->
+          <article class="project-card featured reveal">
+            <div class="project-number">01 / SYSTEMS</div>
+            <h3 class="project-title"><a href="projects/gorgon.html" style="color:inherit;">Gorgon VOS</a></h3>
+            <p class="project-description">
+              A virtual operating system project evolving from a Python-based desktop environment
+              into a real OS and virtualization architecture. The long-term system includes a
+              bootloader, kernel, virtual memory, processes, drivers, userspace, applications,
+              and a QEMU-based execution environment.
+            </p>
+            <div class="project-tags">
+              <span class="tag">C</span>
+              <span class="tag">C++</span>
+              <span class="tag">Assembly</span>
+              <span class="tag">QEMU</span>
+              <span class="tag">Linux</span>
+              <span class="tag">Python</span>
+            </div>
+            <a class="project-link" href="projects/gorgon.html">
+              View Project <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+          </article>
+
+          <!-- MINI KERNEL -->
+          <article class="project-card reveal reveal-delay-1">
+            <div class="project-number">02 / LOW LEVEL</div>
+            <h3 class="project-title"><a href="projects/mini-kernel.html" style="color:inherit;">Mini Kernel</a></h3>
+            <p class="project-description">
+              A bootable kernel experiment focused on understanding the path from machine startup
+              to kernel execution using C, x86 Assembly, a custom build system, and QEMU.
+            </p>
+            <div class="project-tags">
+              <span class="tag">C</span>
+              <span class="tag">x86 Assembly</span>
+              <span class="tag">NASM</span>
+              <span class="tag">QEMU</span>
+            </div>
+            <a class="project-link" href="projects/mini-kernel.html">
+              View Project <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+          </article>
+
+          <!-- SNAKE AI -->
+          <article class="project-card reveal reveal-delay-2">
+            <div class="project-number">03 / AI</div>
+            <h3 class="project-title"><a href="projects/snake-ai.html" style="color:inherit;">Snake AI</a></h3>
+            <p class="project-description">
+              A Deep Q-Learning agent trained to play Snake using PyTorch and Pygame, with
+              reinforcement learning, experience replay, and persistent training progress.
+            </p>
+            <div class="project-tags">
+              <span class="tag">Python</span>
+              <span class="tag">PyTorch</span>
+              <span class="tag">DQN</span>
+              <span class="tag">Pygame</span>
+            </div>
+            <a class="project-link" href="projects/snake-ai.html">
+              View Project <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+          </article>
+
+          <!-- CHIP8 -->
+          <article class="project-card reveal">
+            <div class="project-number">04 / EMULATION</div>
+            <h3 class="project-title"><a href="projects/chip8.html" style="color:inherit;">CHIP-8 Emulator</a></h3>
+            <p class="project-description">
+              A low-level emulator implementing CPU instructions, memory, graphics, input handling,
+              and the execution cycle of the CHIP-8 virtual machine.
+            </p>
+            <div class="project-tags">
+              <span class="tag">C</span>
+              <span class="tag">SDL2</span>
+              <span class="tag">Emulation</span>
+            </div>
+            <a class="project-link" href="projects/chip8.html">
+              View Project <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+          </article>
+
+          <!-- UNIX SHELL -->
+          <article class="project-card reveal reveal-delay-1">
+            <div class="project-number">05 / SYSTEMS</div>
+            <h3 class="project-title"><a href="projects/unix-shell.html" style="color:inherit;">C Unix Shell</a></h3>
+            <p class="project-description">
+              A Unix-style command shell built in C to explore processes, command execution, pipes,
+              system calls, and interaction with the operating system.
+            </p>
+            <div class="project-tags">
+              <span class="tag">C</span>
+              <span class="tag">Unix</span>
+              <span class="tag">Processes</span>
+              <span class="tag">POSIX</span>
+            </div>
+            <a class="project-link" href="projects/unix-shell.html">
+              View Project <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+          </article>
+
+          <!-- CHESS -->
+          <article class="project-card reveal reveal-delay-2">
+            <div class="project-number">06 / SOFTWARE</div>
+            <h3 class="project-title"><a href="projects/chess.html" style="color:inherit;">Chess Game 2.0</a></h3>
+            <p class="project-description">
+              A Python and Pygame chess application featuring interactive gameplay, AI
+              experimentation, and two-player modes.
+            </p>
+            <div class="project-tags">
+              <span class="tag">Python</span>
+              <span class="tag">Pygame</span>
+              <span class="tag">AI</span>
+            </div>
+            <a class="project-link" href="projects/chess.html">
+              View Project <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+          </article>
+        </div>
       </div>
-    `;
+    </section>
 
-    grid.appendChild(card);
+    <!-- ==================================================
+         TECHNOLOGY STACK
+    ================================================== -->
 
-  });
+    <section id="stack" class="technology-section">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">Technical stack</div>
+          <h2>What I'm working with.</h2>
+          <p class="section-description">
+            Rather than ranking technologies as "strong" or "weak", I separate them by how I actually use them.
+          </p>
+        </div>
 
-}
+        <!-- BUILT WITH -->
+        <div class="tech-category reveal">
+          <div class="category-heading">
+            <h3>Built With</h3>
+            <span>used in projects</span>
+          </div>
+          <div class="tech-grid">
+            <div class="tech-card">
+              <div class="tech-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python"></div>
+              <div class="tech-info"><strong>Python</strong><span>AI · Apps · Automation</span></div>
+            </div>
+            <div class="tech-card">
+              <div class="tech-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" alt="C"></div>
+              <div class="tech-info"><strong>C</strong><span>Kernels · Systems</span></div>
+            </div>
+            <div class="tech-card">
+              <div class="tech-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" alt="C++"></div>
+              <div class="tech-info"><strong>C++</strong><span>Systems · Tooling</span></div>
+            </div>
+            <div class="tech-card">
+              <div class="tech-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript"></div>
+              <div class="tech-info"><strong>JavaScript</strong><span>Web · Interfaces</span></div>
+            </div>
+            <div class="tech-card">
+              <div class="tech-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Linux"></div>
+              <div class="tech-info"><strong>Linux</strong><span>Systems · Development</span></div>
+            </div>
+            <div class="tech-card">
+              <div class="tech-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker"></div>
+              <div class="tech-info"><strong>Docker</strong><span>Build · Environments</span></div>
+            </div>
+            <div class="tech-card">
+              <div class="tech-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git"></div>
+              <div class="tech-info"><strong>Git</strong><span>Version control</span></div>
+            </div>
+            <div class="tech-card">
+              <div class="tech-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub"></div>
+              <div class="tech-info"><strong>GitHub</strong><span>Projects · Collaboration</span></div>
+            </div>
+          </div>
+        </div>
 
+        <!-- CURRENTLY LEARNING -->
+        <div class="tech-category learning reveal">
+          <div class="category-heading">
+            <h3>Currently Learning</h3>
+            <span>actively developing</span>
+          </div>
+          <div class="tech-grid">
+            <div class="tech-card">
+              <div class="tech-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-original.svg" alt="Rust"></div>
+              <div class="tech-info"><strong>Rust</strong><span>Systems programming</span></div>
+            </div>
+            <div class="tech-card">
+              <div class="tech-icon"><i class="fa-solid fa-microchip"></i></div>
+              <div class="tech-info"><strong>x86 Assembly</strong><span>Computer architecture</span></div>
+            </div>
+            <div class="tech-card">
+              <div class="tech-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/blender/blender-original.svg" alt="Blender"></div>
+              <div class="tech-info"><strong>Blender</strong><span>3D · Visualization</span></div>
+            </div>
+            <div class="tech-card">
+              <div class="tech-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/arduino/arduino-original.svg" alt="Arduino"></div>
+              <div class="tech-info"><strong>Arduino</strong><span>Embedded · Robotics</span></div>
+            </div>
+          </div>
+        </div>
 
-/* =========================================================
-   RENDER PROJECTS
-========================================================= */
-
-function renderProjects(filter = "all") {
-
-  const list = document.getElementById("projectList");
-
-  list.innerHTML = "";
-
-  const filtered = projects.filter(project => {
-
-    return filter === "all" || project.tags.includes(filter);
-
-  });
-
-  if (!filtered.length) {
-
-    list.innerHTML = `
-      <div class="muted">
-        No projects in this category.
+        <!-- EXPLORED -->
+        <div class="tech-category explored reveal">
+          <div class="category-heading">
+            <h3>Explored</h3>
+            <span>experimented with</span>
+          </div>
+          <div class="tech-grid">
+            <div class="tech-card">
+              <div class="tech-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React"></div>
+              <div class="tech-info"><strong>React</strong><span>Web interfaces</span></div>
+            </div>
+            <div class="tech-card">
+              <div class="tech-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/opencv/opencv-original.svg" alt="OpenCV"></div>
+              <div class="tech-info"><strong>OpenCV</strong><span>Computer vision</span></div>
+            </div>
+            <div class="tech-card">
+              <div class="tech-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg" alt="TensorFlow"></div>
+              <div class="tech-info"><strong>TensorFlow</strong><span>Machine learning</span></div>
+            </div>
+            <div class="tech-card">
+              <div class="tech-icon"><i class="fa-solid fa-cube"></i></div>
+              <div class="tech-info"><strong>KiCad</strong><span>PCB design</span></div>
+            </div>
+          </div>
+        </div>
       </div>
-    `;
+    </section>
 
-    return;
-  }
+    <!-- ==================================================
+         MECHATRONICS
+    ================================================== -->
 
-  filtered.forEach(project => {
+    <section id="mechatronics" class="mechatronics">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">Hardware × Software</div>
+          <h2>Mechatronics is the other half.</h2>
+          <p class="section-description">
+            I don't want my work to stop at software. I'm interested in the complete chain: sensing
+            the physical world, processing information, controlling hardware, and designing the
+            mechanical system around it.
+          </p>
+        </div>
 
-    const card = document.createElement("div");
+        <div class="mechatronics-grid">
+          <article class="mecha-card reveal">
+            <div class="mecha-icon"><i class="fa-solid fa-microchip"></i></div>
+            <h3>Embedded Systems</h3>
+            <p>Working with microcontrollers and low-level code to connect software with physical hardware.</p>
+            <div class="mecha-tech">
+              <span>Arduino</span>
+              <span>C/C++</span>
+              <span>GPIO</span>
+              <span>Sensors</span>
+            </div>
+          </article>
 
-    card.className = "card project";
+          <article class="mecha-card reveal reveal-delay-1">
+            <div class="mecha-icon"><i class="fa-solid fa-robot"></i></div>
+            <h3>Robotics</h3>
+            <p>Exploring how sensors, actuators, control systems, software, and mechanical structures work together.</p>
+            <div class="mecha-tech">
+              <span>Motors</span>
+              <span>Sensors</span>
+              <span>Control</span>
+              <span>Automation</span>
+            </div>
+          </article>
 
-    let actionsHtml = '';
-
-    if (project.article) {
-      actionsHtml += `
-        <a href="${project.article}" class="action-link">
-          <i class="fas fa-book-open"></i> Technical Write-up
-        </a>
-      `;
-    }
-
-    actionsHtml += `
-      <a href="${project.repo}" target="_blank" rel="noopener noreferrer" class="action-link">
-        <i class="fab fa-github"></i> GitHub
-      </a>
-    `;
-
-    const articleUrl = project.article ? resolveProjectPath(project.article) : "";
-
-    card.innerHTML = `
-
-      <div class="project-title">
-
-        <strong>
-          ${project.article ? `<a href="${articleUrl}" style="color:#dce5f0;">${project.title}</a>` : project.title}
-        </strong>
-
-        <span class="muted small">
-          ${project.date}
-        </span>
-
+          <article class="mecha-card reveal reveal-delay-2">
+            <div class="mecha-icon"><i class="fa-solid fa-gears"></i></div>
+            <h3>Mechanical Design</h3>
+            <p>Learning 3D modelling and mechanical design to build physical structures that integrate with electronics.</p>
+            <div class="mecha-tech">
+              <span>CAD</span>
+              <span>Blender</span>
+              <span>3D Design</span>
+              <span>Mechanisms</span>
+            </div>
+          </article>
+        </div>
       </div>
+    </section>
 
-      <div class="project-description">
-        ${project.description}
+    <!-- ==================================================
+         SYSTEMS
+    ================================================== -->
+
+    <section id="systems" class="systems">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">How I think about systems</div>
+          <h2>From electrons to applications.</h2>
+          <p class="section-description">
+            My interests span multiple layers of a computing system. Click a layer to explore what it means.
+          </p>
+        </div>
+
+        <div class="system-map reveal">
+          <button class="system-node active" type="button" data-system="hardware">
+            <span class="node-index">01</span>
+            <h3>Hardware</h3>
+            <p>CPU · Memory · Sensors · Electronics</p>
+          </button>
+          <button class="system-node" type="button" data-system="firmware">
+            <span class="node-index">02</span>
+            <h3>Firmware</h3>
+            <p>Microcontrollers · Embedded software</p>
+          </button>
+          <button class="system-node" type="button" data-system="bootloader">
+            <span class="node-index">03</span>
+            <h3>Bootloader</h3>
+            <p>Startup · CPU initialization</p>
+          </button>
+          <button class="system-node" type="button" data-system="kernel">
+            <span class="node-index">04</span>
+            <h3>Kernel</h3>
+            <p>Memory · Processes · Drivers</p>
+          </button>
+          <button class="system-node" type="button" data-system="userspace">
+            <span class="node-index">05</span>
+            <h3>Userspace</h3>
+            <p>Services · Runtime · APIs</p>
+          </button>
+          <button class="system-node" type="button" data-system="applications">
+            <span class="node-index">06</span>
+            <h3>Applications</h3>
+            <p>Desktop · AI · Browser · Tools</p>
+          </button>
+        </div>
+
+        <div id="systemDescription" class="system-description reveal" aria-live="polite">
+          Hardware is the physical foundation — processors, memory, storage, sensors, motors, displays,
+          and the electronics connecting everything together.
+        </div>
       </div>
+    </section>
 
-      <div class="wrap" style="margin-top:10px;">
+    <!-- ==================================================
+         CURRENT DIRECTION
+    ================================================== -->
 
-        ${project.tags
-          .map(tag => `<span class="chip">${tag}</span>`)
-          .join("")}
+    <section class="learning-map">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">What's next</div>
+          <h2>Where I'm heading.</h2>
+          <p class="section-description">
+            The goal isn't simply to collect technologies. It's to understand how the layers connect
+            and eventually build larger systems from them.
+          </p>
+        </div>
 
+        <div class="learning-grid">
+          <article class="learning-card reveal">
+            <div class="icon"><i class="fa-solid fa-server"></i></div>
+            <h3>Operating Systems</h3>
+            <p>Continuing Gorgon toward a real kernel, memory management, processes, drivers, filesystems, virtualization, and userspace.</p>
+            <div class="learning-progress"><span style="--progress: 75%"></span></div>
+          </article>
+
+          <article class="learning-card reveal reveal-delay-1">
+            <div class="icon"><i class="fa-solid fa-brain"></i></div>
+            <h3>Artificial Intelligence</h3>
+            <p>Moving from small reinforcement-learning projects toward deeper work with neural networks, computer vision, and AI systems.</p>
+            <div class="learning-progress"><span style="--progress: 60%"></span></div>
+          </article>
+
+          <article class="learning-card reveal reveal-delay-2">
+            <div class="icon"><i class="fa-solid fa-robot"></i></div>
+            <h3>Robotics</h3>
+            <p>Connecting embedded systems, sensors, control, artificial intelligence, and mechanical design into physical machines.</p>
+            <div class="learning-progress"><span style="--progress: 45%"></span></div>
+          </article>
+        </div>
       </div>
+    </section>
 
-      <div class="project-actions">
-        ${actionsHtml}
+    <!-- ==================================================
+         TERMINAL
+    ================================================== -->
+
+    <section class="terminal-section">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">Interactive</div>
+          <h2>Talk to the terminal.</h2>
+          <p class="section-description">A small interactive view into the projects and systems behind the portfolio.</p>
+        </div>
+
+        <div class="terminal reveal">
+          <div class="terminal-header">
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+            <span style="margin-left:8px;">soala@portfolio</span>
+          </div>
+
+          <div class="terminal-body">
+            <div class="terminal-line">
+              <span class="terminal-prompt">$</span>
+              <span id="terminalOutput">Type "help" to see available commands.</span>
+            </div>
+            <input id="terminalInput" class="terminal-input" type="text" autocomplete="off" spellcheck="false" placeholder="try: projects" aria-label="Terminal command">
+          </div>
+        </div>
       </div>
-
-    `;
-
-    list.appendChild(card);
-
-  });
-
-}
-
-
-/* =========================================================
-   PROJECT FILTERS
-========================================================= */
-
-document.querySelectorAll(".filter-btn").forEach(button => {
-
-  button.addEventListener("click", () => {
-
-    document
-      .querySelectorAll(".filter-btn")
-      .forEach(btn => btn.classList.remove("active"));
-
-    button.classList.add("active");
-
-    renderProjects(button.dataset.filter);
-
-  });
-
-});
-
-
-/* =========================================================
-   SYSTEM DIAGRAM
-========================================================= */
-
-const systemDescriptions = {
-
-  firmware:
-    "Firmware is the low-level software that initializes hardware before the operating system takes over.",
-
-  bootloader:
-    "The bootloader prepares the machine and loads the operating-system kernel into memory.",
-
-  kernel:
-    "The kernel is the privileged core responsible for CPU management, memory, processes, interrupts, storage and hardware access.",
-
-  drivers:
-    "Drivers provide the interface between operating-system software and hardware devices.",
-
-  userspace:
-    "Userspace contains system services, libraries and programs that run outside the privileged kernel.",
-
-  applications:
-    "Applications are programs users interact with, running on top of the operating-system environment."
-
-};
-
-
-document.querySelectorAll(".system-node").forEach(node => {
-
-  node.addEventListener("click", () => {
-
-    const key = node.dataset.system;
-
-    document.getElementById("systemInfo").innerHTML = `
-      <strong>${key.toUpperCase()}</strong><br>
-      ${systemDescriptions[key]}
-    `;
-
-  });
-
-});
-
-
-/* =========================================================
-   TERMINAL
-========================================================= */
-
-const terminalInput =
-  document.getElementById("terminalInput");
-
-const terminalOutput =
-  document.getElementById("terminalOutput");
-
-
-function terminalPrint(text) {
-
-  const line = document.createElement("div");
-
-  line.className = "terminal-line";
-
-  line.innerHTML = text;
-
-  terminalOutput.appendChild(line);
-
-  terminalOutput.scrollTop =
-    terminalOutput.scrollHeight;
-
-}
-
-
-function handleCommand(command) {
-
-  const cmd = command.trim().toLowerCase();
-
-  switch (cmd) {
-
-    case "help":
-
-      terminalPrint(`
-        Available commands:<br>
-        about · skills · projects · systems · education ·
-        github · socials · learning · clear
-      `);
-
-      break;
-
-
-    case "about":
-
-      terminalPrint(`Hi I'm Soala Amachree, being learning systems and programming since 2024. Loved to be an enginner and long as i could remember. I've studied and learnt programming languages, systems, Computer Architecture, AI, electronics, mechanical design, Mathematics and the Sciences. I enjoy building software, exploring operating systems and experimenting with both software and hardware.`);
-
-      break;
-
-
-    case "skills":
-
-      terminalPrint(`
-        Python · C · C++ · JavaScript · HTML/CSS ·
-        Git · Linux · Docker · QEMU · GCC · GDB ·
-        PyTorch · OpenCV · Arduino · KiCad · Fusion 360 ·
-        Onshape · Figma
-      `);
-
-      break;
-
-
-    case "learning":
-
-      terminalPrint(`
-        Currently learning: Rust · x86-64 Assembly ·
-        Operating-system development · Blender ·
-        Robotics · Computer Vision
-      `);
-
-      break;
-
-
-    case "projects":
-
-      terminalPrint(`
-        Gorgon-OS-Virtual-Simulator · Snake-AI ·
-        Mini-Kernel · Chip8-Emulator · c-unix-shell ·
-        Chess-game-2.0 · Pygame 
-      `);
-
-      break;
-
-
-    case "systems":
-
-      terminalPrint(`
-        Operating systems · kernels · bootloaders ·
-        memory · filesystems · virtualization ·
-        QEMU/KVM · x86-64 · C · Assembly
-      `);
-
-      break;
-
-
-    case "education":
-
-      terminalPrint(`
-        WASSCE 2026 · UTME 2026 · CS50P
-      `);
-
-      break;
-
-
-    case "github":
-
-      terminalPrint(`
-        <a href="https://github.com/Soala7"
-        target="_blank"
-        rel="noopener noreferrer">
-        github.com/Soala7
-        </a>
-      `);
-
-      break;
-
-
-    case "socials":
-
-      terminalPrint(`
-        GitHub · X · LinkedIn · TikTok · YouTube
-      `);
-
-      break;
-
-
-    case "clear":
-
-      terminalOutput.innerHTML = "";
-
-      break;
-
-
-    default:
-
-      terminalPrint(
-        `command not found: ${command}`
-      );
-
-  }
-
-}
-
-
-terminalInput.addEventListener("keydown", event => {
-
-  if (event.key !== "Enter") return;
-
-  const command = terminalInput.value.trim();
-
-  if (!command) return;
-
-  terminalPrint(
-    `<span class="terminal-highlight">$ ${command}</span>`
-  );
-
-  handleCommand(command);
-
-  terminalInput.value = "";
-
-});
-
-
-/* =========================================================
-   IMAGE ERROR HANDLING
-========================================================= */
-
-function imageError(image) {
-
-  const container = image.parentElement;
-
-  image.style.display = "none";
-
-  const fallback = document.createElement("div");
-
-  fallback.className = "image-error";
-
-  fallback.textContent = "Image unavailable";
-
-  container.insertBefore(fallback, image);
-
-}
-
-
-/* =========================================================
-   IMAGE MODAL
-========================================================= */
-
-function openImage(source, title) {
-
-  const modal =
-    document.getElementById("imageModal");
-
-  const image =
-    document.getElementById("modalImage");
-
-  const modalTitle =
-    document.getElementById("modalTitle");
-
-  modalTitle.textContent = title;
-
-  image.src = source;
-
-  image.alt = title;
-
-  modal.classList.add("open");
-
-}
-
-
-function closeModal() {
-
-  document
-    .getElementById("imageModal")
-    .classList.remove("open");
-
-}
-
-
-document
-  .getElementById("imageModal")
-  .addEventListener("click", event => {
-
-    if (event.target.id === "imageModal") {
-      closeModal();
-    }
-
-  });
-
-
-document.addEventListener("keydown", event => {
-
-  if (event.key === "Escape") {
-    closeModal();
-  }
-
-});
-
-
-/* =========================================================
-   START
-========================================================= */
-
-renderTechnologies();
-
-renderProjects("all");
-
-</script>
+    </section>
+
+  </main>
+
+  <!-- ==================================================
+       FOOTER
+  ================================================== -->
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <span>© 2026 Soala Amachree</span>
+        <div class="socials">
+          <a href="https://github.com/Soala7" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+          <a href="https://www.linkedin.com/in/soala-amachree/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+          <a href="https://x.com/Soala7VA" target="_blank" rel="noopener noreferrer" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ==================================================
+       SCROLL REVEAL
+    ================================================== */
+
+    const revealElements = document.querySelectorAll(".reveal");
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("revealed");
+        revealObserver.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+
+    revealElements.forEach(element => revealObserver.observe(element));
+
+    /* ==================================================
+       SYSTEM MAP
+    ================================================== */
+
+    const descriptions = {
+      hardware: "Hardware is the physical foundation — processors, memory, storage, sensors, motors, displays, and the electronics connecting everything together.",
+      firmware: "Firmware provides the bridge between physical hardware and higher-level software. This is where microcontrollers, GPIO, sensors, motors, and embedded C/C++ become important.",
+      bootloader: "The bootloader is responsible for getting the machine into a state where the operating system kernel can begin execution. Gorgon explores this layer using x86 Assembly and low-level system code.",
+      kernel: "The kernel is the core of an operating system. It manages memory, processes, scheduling, interrupts, drivers, filesystems, and communication with hardware.",
+      userspace: "Userspace contains the services, runtimes, APIs, desktop environment, and other components that operate above the kernel without directly controlling hardware.",
+      applications: "Applications are the systems users interact with — AI tools, terminals, browsers, editors, games, and other software built on top of the underlying platform."
+    };
+
+    const systemNodes = document.querySelectorAll(".system-node");
+    const systemDescription = document.getElementById("systemDescription");
+
+    systemNodes.forEach(node => {
+      node.addEventListener("click", () => {
+        systemNodes.forEach(item => item.classList.remove("active"));
+        node.classList.add("active");
+        systemDescription.textContent = descriptions[node.dataset.system];
+      });
+    });
+
+    /* ==================================================
+       TERMINAL
+    ================================================== */
+
+    const terminalInput = document.getElementById("terminalInput");
+    const terminalOutput = document.getElementById("terminalOutput");
+
+    const commands = {
+      help: 'Available commands: about, projects, stack, systems, mechatronics, github, clear',
+      about: "I'm Soala Amachree — a Mechatronics Engineering student building across software, systems, AI, robotics, electronics, and mechanical design.",
+      projects: "Gorgon VOS · Mini Kernel · Snake AI · CHIP-8 Emulator · C Unix Shell · Chess Game",
+      stack: "Python · C · C++ · JavaScript · Linux · Docker · Git · QEMU · PyTorch · Pygame",
+      systems: "Hardware → Firmware → Bootloader → Kernel → Userspace → Applications",
+      mechatronics: "Arduino · Embedded Systems · Sensors · Motors · Robotics · CAD · Mechanical Design",
+      github: "github.com/Soala7",
+      clear: ""
+    };
+
+    terminalInput.addEventListener("keydown", event => {
+      if (event.key !== "Enter") return;
+      const command = terminalInput.value.trim().toLowerCase();
+      terminalInput.value = "";
+      if (command === "clear") {
+        terminalOutput.textContent = "";
+        return;
+      }
+      terminalOutput.textContent = commands[command] || `Command not found: ${command}. Type "help".`;
+    });
+
+    /* ==================================================
+       INITIAL REVEAL FOR HERO
+    ================================================== */
+
+    window.addEventListener("load", () => {
+      document.querySelectorAll(".hero .reveal").forEach((element, index) => {
+        setTimeout(() => element.classList.add("revealed"), 150 + (index * 80));
+      });
+    });
+  </script>
 
 </body>
 </html>
